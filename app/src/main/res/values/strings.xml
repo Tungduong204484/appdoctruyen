@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">app đọc truyện</string>
+    <string name="app_name">App Đọc Truyện</string>
+    <string name="nav_library">Tủ Truyện</string>
+    <string name="nav_explore">Khám Phá</string>
+    <string name="nav_ranking">Xếp Hạng</string>
+    <string name="nav_account">Tài Khoản</string>
 </resources>

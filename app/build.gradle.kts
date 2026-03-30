@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.appctruyn"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.appctruyn"
@@ -43,4 +39,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 }
