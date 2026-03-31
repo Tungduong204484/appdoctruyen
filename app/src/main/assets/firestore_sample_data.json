@@ -1,0 +1,902 @@
+[
+  {
+    "title": "Truyện 1",
+    "author": "Tác giả 1",
+    "description": "Mô tả truyện 1",
+    "coverUrl": "https://picsum.photos/200/300?1",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 38609,
+    "rating": 3.7,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 1",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 1",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 1",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 1",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 1",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 2",
+    "author": "Tác giả 2",
+    "description": "Mô tả truyện 2",
+    "coverUrl": "https://picsum.photos/200/300?2",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 81034,
+    "rating": 4.0,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 2",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 2",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 2",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 2",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 2",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 3",
+    "author": "Tác giả 3",
+    "description": "Mô tả truyện 3",
+    "coverUrl": "https://picsum.photos/200/300?3",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 84001,
+    "rating": 3.8,
+    "isHot": true,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 3",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 3",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 3",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 3",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 3",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 4",
+    "author": "Tác giả 4",
+    "description": "Mô tả truyện 4",
+    "coverUrl": "https://picsum.photos/200/300?4",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 51449,
+    "rating": 3.6,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 4",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 4",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 4",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 4",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 4",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 5",
+    "author": "Tác giả 5",
+    "description": "Mô tả truyện 5",
+    "coverUrl": "https://picsum.photos/200/300?5",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 57023,
+    "rating": 4.7,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 5",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 5",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 5",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 5",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 5",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 6",
+    "author": "Tác giả 6",
+    "description": "Mô tả truyện 6",
+    "coverUrl": "https://picsum.photos/200/300?6",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 28444,
+    "rating": 4.5,
+    "isHot": true,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 6",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 6",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 6",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 6",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 6",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 7",
+    "author": "Tác giả 7",
+    "description": "Mô tả truyện 7",
+    "coverUrl": "https://picsum.photos/200/300?7",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 47291,
+    "rating": 4.7,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 7",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 7",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 7",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 7",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 7",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 8",
+    "author": "Tác giả 8",
+    "description": "Mô tả truyện 8",
+    "coverUrl": "https://picsum.photos/200/300?8",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 74099,
+    "rating": 4.2,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 8",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 8",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 8",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 8",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 8",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 9",
+    "author": "Tác giả 9",
+    "description": "Mô tả truyện 9",
+    "coverUrl": "https://picsum.photos/200/300?9",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 22822,
+    "rating": 4.1,
+    "isHot": true,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 9",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 9",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 9",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 9",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 9",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 10",
+    "author": "Tác giả 10",
+    "description": "Mô tả truyện 10",
+    "coverUrl": "https://picsum.photos/200/300?10",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 34929,
+    "rating": 4.6,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 10",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 10",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 10",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 10",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 10",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 11",
+    "author": "Tác giả 11",
+    "description": "Mô tả truyện 11",
+    "coverUrl": "https://picsum.photos/200/300?11",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 59867,
+    "rating": 3.6,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 11",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 11",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 11",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 11",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 11",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 12",
+    "author": "Tác giả 12",
+    "description": "Mô tả truyện 12",
+    "coverUrl": "https://picsum.photos/200/300?12",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 95262,
+    "rating": 4.8,
+    "isHot": true,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 12",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 12",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 12",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 12",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 12",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 13",
+    "author": "Tác giả 13",
+    "description": "Mô tả truyện 13",
+    "coverUrl": "https://picsum.photos/200/300?13",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 86810,
+    "rating": 4.0,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 13",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 13",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 13",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 13",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 13",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 14",
+    "author": "Tác giả 14",
+    "description": "Mô tả truyện 14",
+    "coverUrl": "https://picsum.photos/200/300?14",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 18974,
+    "rating": 4.8,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 14",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 14",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 14",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 14",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 14",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 15",
+    "author": "Tác giả 15",
+    "description": "Mô tả truyện 15",
+    "coverUrl": "https://picsum.photos/200/300?15",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 92092,
+    "rating": 3.1,
+    "isHot": true,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 15",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 15",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 15",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 15",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 15",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 16",
+    "author": "Tác giả 16",
+    "description": "Mô tả truyện 16",
+    "coverUrl": "https://picsum.photos/200/300?16",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 20629,
+    "rating": 4.9,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 16",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 16",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 16",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 16",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 16",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 17",
+    "author": "Tác giả 17",
+    "description": "Mô tả truyện 17",
+    "coverUrl": "https://picsum.photos/200/300?17",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 87019,
+    "rating": 3.3,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 17",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 17",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 17",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 17",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 17",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 18",
+    "author": "Tác giả 18",
+    "description": "Mô tả truyện 18",
+    "coverUrl": "https://picsum.photos/200/300?18",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 84797,
+    "rating": 4.2,
+    "isHot": true,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 18",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 18",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 18",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 18",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 18",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 19",
+    "author": "Tác giả 19",
+    "description": "Mô tả truyện 19",
+    "coverUrl": "https://picsum.photos/200/300?19",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 46958,
+    "rating": 4.8,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 19",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 19",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 19",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 19",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 19",
+        "images": []
+      }
+    ]
+  },
+  {
+    "title": "Truyện 20",
+    "author": "Tác giả 20",
+    "description": "Mô tả truyện 20",
+    "coverUrl": "https://picsum.photos/200/300?20",
+    "genre": "Action",
+    "status": "Đang ra",
+    "chap": 5,
+    "totalChapters": 1000,
+    "views": 8814,
+    "rating": 4.1,
+    "isHot": false,
+    "chapters": [
+      {
+        "title": "Chương 1",
+        "number": 1,
+        "content": "Nội dung chương 1 của truyện 20",
+        "images": []
+      },
+      {
+        "title": "Chương 2",
+        "number": 2,
+        "content": "Nội dung chương 2 của truyện 20",
+        "images": []
+      },
+      {
+        "title": "Chương 3",
+        "number": 3,
+        "content": "Nội dung chương 3 của truyện 20",
+        "images": []
+      },
+      {
+        "title": "Chương 4",
+        "number": 4,
+        "content": "Nội dung chương 4 của truyện 20",
+        "images": []
+      },
+      {
+        "title": "Chương 5",
+        "number": 5,
+        "content": "Nội dung chương 5 của truyện 20",
+        "images": []
+      }
+    ]
+  }
+]
