@@ -7,16 +7,32 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.appctruyn.R
 import com.example.appctruyn.model.Story
 
-class MoiHoanThanhAdapter(private val storyList: List<Story>) :
-    RecyclerView.Adapter<MoiHoanThanhAdapter.ViewHolder>() {
+class MoiHoanThanhAdapter(
+    private val storyList: List<Story>,
+    private val onItemClick: (Story) -> Unit  // ← PHẢI CÓ
+) : RecyclerView.Adapter<MoiHoanThanhAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivCover: ImageView = view.findViewById(R.id.ivCover)
         val tvTitle: TextView = view.findViewById(R.id.tvTitle)
         val tvGenre: TextView = view.findViewById(R.id.tvGenre)
-        val tvRating: TextView = view.findViewById(R.id.tvRating)
+
+        fun bind(story: Story) {
+            tvTitle.text = story.title
+            tvGenre.text = story.genre
+            Glide.with(itemView.context)
+                .load(story.coverUrl)
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(ivCover)
+
+            // ← PHẢI CÓ CLICK LISTENER NÀY
+            itemView.setOnClickListener {
+                onItemClick(story)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,16 +42,8 @@ class MoiHoanThanhAdapter(private val storyList: List<Story>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val story = storyList[position]
-        holder.tvTitle.text = story.title
-        holder.tvGenre.text = story.genre
-        holder.tvRating.text = "★★★★★ ${story.rating}"
-        
-        Glide.with(holder.itemView.context)
-            .load(story.coverUrl)
-            .placeholder(R.drawable.ic_launcher_background)
-            .into(holder.ivCover)
+        holder.bind(storyList[position])
     }
 
-    override fun getItemCount() = storyList.size
+    override fun getItemCount(): Int = storyList.size
 }

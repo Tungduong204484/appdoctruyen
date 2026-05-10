@@ -1,36 +1,46 @@
 package com.example.appctruyn
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.appctruyn.databinding.ItemStoryBinding
 import com.example.appctruyn.model.Story
 
 class StoryAdapter(
-    private val storyList: List<Story>
+    private val storyList: List<Story>,
+    private val onItemClick: (Story) -> Unit
 ) : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
-    inner class StoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitle:  TextView = itemView.findViewById(R.id.tv_title)
-        val tvAuthor: TextView = itemView.findViewById(R.id.tv_author)
-        val tvViews:  TextView = itemView.findViewById(R.id.tv_views)
-        val tvStatus: TextView = itemView.findViewById(R.id.tv_status)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StoryViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_story, parent, false)
-        return StoryViewHolder(view)
+        val binding = ItemStoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return StoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = storyList[position]
-        holder.tvTitle.text  = story.title
-        holder.tvAuthor.text = story.author
-        holder.tvViews.text  = "${story.views} lượt xem"
-        holder.tvStatus.text = story.status
+        holder.bind(story)
     }
 
-    override fun getItemCount() = storyList.size
+    override fun getItemCount(): Int = storyList.size
+
+    inner class StoryViewHolder(private val binding: ItemStoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(story: Story) {
+            binding.tvTitle.text = story.title
+            binding.tvGenre.text = story.genre
+            binding.tvViews.text = binding.root.context.getString(R.string.views_format, story.views)
+            binding.tvStatus.text = story.status
+
+            // Load ảnh với Glide
+            Glide.with(binding.root.context)
+                .load(story.coverUrl)
+                .into(binding.ivCover)
+
+            binding.root.setOnClickListener {
+                onItemClick(story)
+            }
+        }
+    }
 }
