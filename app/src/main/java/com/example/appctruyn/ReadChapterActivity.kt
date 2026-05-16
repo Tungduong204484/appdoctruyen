@@ -1,5 +1,6 @@
 package com.example.appctruyn
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +27,19 @@ class ReadChapterActivity : AppCompatActivity() {
             return
         }
 
+        // Lưu chương đang đọc vào SharedPreferences
+        saveLastReadChapter(storyId, chapterId, chapterNumber)
+
         loadChapter(storyId, chapterId, chapterNumber)
+    }
+
+    private fun saveLastReadChapter(storyId: String, chapterId: String, chapterNumber: Int) {
+        val prefs = getSharedPreferences("ReaderPrefs", Context.MODE_PRIVATE)
+        prefs.edit().apply {
+            putString("last_chapter_id_$storyId", chapterId)
+            putInt("last_chapter_number_$storyId", chapterNumber)
+            apply()
+        }
     }
 
     private fun loadChapter(storyId: String, chapterId: String, chapterNumber: Int) {

@@ -21,8 +21,19 @@ class ChapterAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chapter = chapters[position]
-        holder.binding.tvChapterTitle.text = "Chương ${chapter.chapterNumber}: ${chapter.title}"
-        holder.binding.root.setOnClickListener { onItemClick(chapter) }
+        holder.binding.apply {
+            // Hiển thị số thứ tự chương (1, 2, 3...)
+            tvChapterIndex.text = (position + 1).toString()
+            
+            // Hiển thị tiêu đề: "Chương X: Tên chương"
+            tvChapterTitle.text = "Chương ${chapter.number}: ${chapter.title}"
+            
+            // Hiển thị thời gian đăng chương (ví dụ: (2025-02-19 09:43))
+            tvTimestamp.text = if (chapter.timestamp.isNotEmpty()) "(${chapter.timestamp})" else ""
+            
+            // Sự kiện click để mở màn hình đọc truyện
+            root.setOnClickListener { onItemClick(chapter) }
+        }
     }
 
     override fun getItemCount(): Int = chapters.size

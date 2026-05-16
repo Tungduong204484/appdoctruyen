@@ -20,4 +20,9 @@
 
     <style name="Theme.Appctruyn" parent="Base.Theme.Appctruyn" />
 
+    <style name="RatingBarTheme" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#949494</item>
+        <item name="colorControlActivated">#F1C40F</item>
+    </style>
+
 </resources>

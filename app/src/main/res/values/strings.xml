@@ -5,4 +5,5 @@
     <string name="nav_explore">Khám Phá</string>
     <string name="nav_ranking">Xếp Hạng</string>
     <string name="nav_account">Tài Khoản</string>
+    <string name="views_format">%1$d lượt xem</string>
 </resources>

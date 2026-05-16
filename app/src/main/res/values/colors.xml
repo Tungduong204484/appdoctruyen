@@ -22,6 +22,10 @@
     <!-- Accent -->
     <color name="accent_blue">#1E90FF</color>
 
+    <!-- Reading Mode Colors -->
+    <color name="read_bg">#FDF6E3</color>
+    <color name="read_text">#2C3E50</color>
+
     <!-- Mặc định Material (giữ lại để app không crash) -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

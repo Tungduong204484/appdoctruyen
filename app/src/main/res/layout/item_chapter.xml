@@ -2,17 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp"
+    android:gravity="center_vertical"
     android:background="?attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/tvChapterTitle"
+        android:id="@+id/tvChapterIndex"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textColor="#BDC3C7"
+        android:textSize="14sp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="?attr/colorPrimary"
-        android:lines="1"
-        android:ellipsize="end" />
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/tvChapterTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#2C3E50"
+            android:text="Chương 1: Tên chương"
+            android:lines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvTimestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#BDC3C7"
+            android:text="(2025-02-19 09:43)"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
 
 </LinearLayout>
