@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Nền -->
-    <color name="bg_dark">#111214</color>
-    <color name="bg_bottomnav">#1A1C1F</color>
+    <!-- Nền và bề mặt -->
+    <color name="background_main">#F8F9FA</color>
+    <color name="background_surface">#FFFFFF</color>
+    <color name="bg_bottomnav">#FFFFFF</color>
+
+    <!-- Chữ -->
+    <color name="text_primary">#1A1C1F</color>
+    <color name="text_secondary">#6C757D</color>
+
+    <!-- Các thành phần khác -->
+    <color name="divider">#E0E0E0</color>
+    <color name="accent_blue">#1E90FF</color>
+    <color name="nav_active">#1E90FF</color>
+    <color name="nav_inactive">#8E8E93</color>
 
     <!-- Avatar -->
     <color name="bg_avatar_purple_color">#6B3FA0</color>
     <color name="bg_avatar_blue_color">#1E6FD9</color>
 
-    <!-- Chữ -->
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#888A8E</color>
-
-    <!-- Bottom nav -->
-    <color name="nav_active">#FFFFFF</color>
-    <color name="nav_inactive">#5A5C62</color>
-
-    <!-- Divider -->
-    <color name="divider">#2C2E32</color>
-
-    <!-- Accent -->
-    <color name="accent_blue">#1E90FF</color>
-
     <!-- Reading Mode Colors -->
     <color name="read_bg">#FDF6E3</color>
     <color name="read_text">#2C3E50</color>
 
-    <!-- Mặc định Material (giữ lại để app không crash) -->
+    <!-- Legacy / Compatibility (Avoid breaks) -->
+    <color name="bg_dark">@color/background_main</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="purple_200">#FFBB86FC</color>

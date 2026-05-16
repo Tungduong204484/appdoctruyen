@@ -1,11 +1,15 @@
 package com.example.appctruyn
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.appctruyn.auth.AuthManager
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -14,18 +18,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSearch: ImageView
     private lateinit var btnFilter: ImageView
     private lateinit var dropdownFilter: LinearLayout
+    private lateinit var appBarLayout: AppBarLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Kiểm tra đăng nhập ngay khi vào App
+        if (!AuthManager.isLoggedIn) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_main)
 
-        // Initialize views
         bottomNav = findViewById(R.id.bottomNav)
         btnSearch = findViewById(R.id.btnSearch)
         btnFilter = findViewById(R.id.btnFilter)
         dropdownFilter = findViewById(R.id.dropdownFilter)
+        appBarLayout = findViewById(R.id.appBarLayout)
 
-        // Load default fragment (Trang Khám Phá - TatCaFragment)
         if (savedInstanceState == null) {
             loadFragment(TatCaFragment())
         }
@@ -35,6 +47,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment) {
+        if (fragment is AccountFragment) {
+            appBarLayout.visibility = View.GONE
+        } else {
+            appBarLayout.visibility = View.VISIBLE
+        }
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
@@ -42,15 +60,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupTopBar() {
         btnSearch.setOnClickListener {
-            Toast.makeText(this, "Tìm kiếm truyện...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.search_hint), Toast.LENGTH_SHORT).show()
         }
 
         btnFilter.setOnClickListener {
-            Toast.makeText(this, "Lọc theo thể loại", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.filter_genre), Toast.LENGTH_SHORT).show()
         }
 
         dropdownFilter.setOnClickListener {
-            Toast.makeText(this, "Thay đổi bộ lọc giới tính", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.filter_gender), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -60,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_library -> {
-                    Toast.makeText(this, "Tủ Truyện", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.nav_library), Toast.LENGTH_SHORT).show()
                     true
                 }
                 R.id.nav_explore -> {
@@ -72,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_account -> {
-                    Toast.makeText(this, "Tài Khoản", Toast.LENGTH_SHORT).show()
+                    loadFragment(AccountFragment())
                     true
                 }
                 else -> false
@@ -80,7 +98,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Chuyển sang trang Xếp hạng và mở tab chỉ định (ví dụ: "Đề cử")
     fun switchToRanking(targetTab: String) {
         val rankingFragment = RankingFragment().apply {
             arguments = Bundle().apply {

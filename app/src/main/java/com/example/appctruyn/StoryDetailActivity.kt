@@ -29,7 +29,7 @@ class StoryDetailActivity : AppCompatActivity() {
 
         storyId = intent.getStringExtra("storyId")
         if (storyId.isNullOrEmpty()) {
-            Toast.makeText(this, "Không tìm thấy truyện", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.story_not_found), Toast.LENGTH_SHORT).show()
             finish()
             return
         }
@@ -51,9 +51,9 @@ class StoryDetailActivity : AppCompatActivity() {
         lastChapterNumber = prefs.getInt("last_chapter_number_$storyId", 1)
 
         if (lastChapterId != null) {
-            binding.btnRead.text = "Đọc tiếp C.$lastChapterNumber"
+            binding.btnRead.text = getString(R.string.btn_read_continue, lastChapterNumber)
         } else {
-            binding.btnRead.text = "Đọc truyện"
+            binding.btnRead.text = getString(R.string.btn_read_now)
         }
     }
 
@@ -71,17 +71,22 @@ class StoryDetailActivity : AppCompatActivity() {
                 intent.putExtra("chapterNumber", targetChapterNumber)
                 startActivity(intent)
             } else {
-                Toast.makeText(this, "Truyện chưa có chương", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.err_no_chapters), Toast.LENGTH_SHORT).show()
             }
         }
         
         binding.btnAddLibrary.setOnClickListener {
-            Toast.makeText(this, "Đã thêm vào tủ truyện", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.added_to_library), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun setupTabs() {
-        val tabTitles = listOf("Giới Thiệu", "Đánh Giá", "Bình Luận", "D.S Chương")
+        val tabTitles = listOf(
+            getString(R.string.tab_intro),
+            getString(R.string.tab_reviews),
+            getString(R.string.tab_comments),
+            getString(R.string.tab_chapters)
+        )
         tabTitles.forEach { title ->
             binding.tabLayout.addTab(binding.tabLayout.newTab().setText(title))
         }
@@ -113,15 +118,15 @@ class StoryDetailActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { doc ->
                 if (!doc.exists()) {
-                    Toast.makeText(this, "Không tìm thấy truyện", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.story_not_found), Toast.LENGTH_SHORT).show()
                     finish()
                     return@addOnSuccessListener
                 }
 
-                binding.tvTitle.text       = doc.getString("title") ?: "Không có tiêu đề"
-                binding.tvAuthor.text      = doc.getString("author") ?: "Không rõ tác giả"
-                binding.tvGenre.text       = doc.getString("genre") ?: "Chưa phân loại"
-                binding.tvDescription.text = doc.getString("description") ?: "Chưa có mô tả"
+                binding.tvTitle.text       = doc.getString("title") ?: getString(R.string.no_title)
+                binding.tvAuthor.text      = doc.getString("author") ?: getString(R.string.no_author)
+                binding.tvGenre.text       = doc.getString("genre") ?: getString(R.string.no_genre)
+                binding.tvDescription.text = doc.getString("description") ?: getString(R.string.no_description)
 
                 val rating = doc.getDouble("rating") ?: 0.0
                 binding.tvRating.text = String.format("%.1f", rating)
@@ -129,7 +134,9 @@ class StoryDetailActivity : AppCompatActivity() {
 
                 val totalChap = doc.getLong("totalChapters")?.toInt() ?: 0
                 binding.tvChapterCountStats.text = totalChap.toString()
-                binding.tvStatusStats.text = "Chương - " + (doc.getString("status") ?: "Còn tiếp")
+                
+                val status = doc.getString("status") ?: getString(R.string.status_ongoing)
+                binding.tvStatusStats.text = getString(R.string.status_prefix, status)
                 
                 binding.tvViewCountStats.text = (doc.getLong("views") ?: 0).toString()
 
@@ -155,14 +162,13 @@ class StoryDetailActivity : AppCompatActivity() {
 
                 if (chapters.isNotEmpty()) {
                     firstChapterId = chapters[0].id
-                    binding.tvChapterTitleHeader.text = "Số chương (${chapters.size})"
+                    binding.tvChapterTitleHeader.text = getString(R.string.chapter_count_format, chapters.size)
                     binding.tvChapterCountStats.text = chapters.size.toString()
                 }
 
                 setupChapterList(chapters)
             }
             .addOnFailureListener {
-                // Fallback nếu có lỗi hoặc cấu trúc khác
                 db.collection("stories").document(storyId)
                     .collection("chapters")
                     .get()
@@ -180,6 +186,7 @@ class StoryDetailActivity : AppCompatActivity() {
                         }
                         if (chapters.isNotEmpty()) {
                             firstChapterId = chapters[0].id
+                            binding.tvChapterTitleHeader.text = getString(R.string.chapter_count_format, chapters.size)
                         }
                         setupChapterList(chapters)
                     }

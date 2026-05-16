@@ -4,10 +4,10 @@ import com.google.firebase.firestore.DocumentId
 
 data class Chapter(
     @DocumentId var id: String = "",
+    val title: String = "",
+    val number: Int = 0,
+    val chapterNumber: Int = 0,
+    val content: String = "",
     var storyId: String = "",
-    var title: String = "",
-    var number: Int = 0,
-    var content: String = "",
-    var timestamp: String = "",
-    var images: List<String> = emptyList()
+    val timestamp: String = ""
 )

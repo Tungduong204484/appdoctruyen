@@ -203,7 +203,7 @@ class TatCaFragment : Fragment() {
             intent.putExtra("storyId", storyId)
             startActivity(intent)
         } else {
-            Toast.makeText(requireContext(), "Không tìm thấy truyện", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.story_not_found), Toast.LENGTH_SHORT).show()
         }
     }
 

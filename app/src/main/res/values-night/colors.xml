@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nền và bề mặt (Dark Mode - Improved) -->
+    <color name="background_main">#121212</color>
+    <color name="background_surface">#1E1E1E</color>
+    <color name="bg_bottomnav">#1E1E1E</color>
+
+    <!-- Chữ -->
+    <color name="text_primary">#E1E1E1</color>
+    <color name="text_secondary">#B0B0B0</color>
+
+    <!-- Các thành phần khác -->
+    <color name="divider">#333333</color>
+    <color name="accent_blue">#3D9AFE</color>
+    <color name="nav_active">#3D9AFE</color>
+    <color name="nav_inactive">#888888</color>
+
+    <!-- Legacy / Compatibility -->
+    <color name="bg_dark">@color/background_main</color>
+</resources>
