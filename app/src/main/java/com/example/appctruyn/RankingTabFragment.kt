@@ -1,9 +1,11 @@
 package com.example.appctruyn
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -54,7 +56,19 @@ class RankingTabFragment : Fragment() {
 
         query.limit(20).get().addOnSuccessListener { documents ->
             val list = documents.toObjects(Story::class.java)
-            rvRanking.adapter = RankingAdapter(list)
+            rvRanking.adapter = RankingAdapter(list) { story ->
+                navigateToStoryDetail(story.id)
+            }
+        }
+    }
+
+    private fun navigateToStoryDetail(storyId: String?) {
+        if (!storyId.isNullOrEmpty()) {
+            val intent = Intent(requireContext(), StoryDetailActivity::class.java)
+            intent.putExtra("storyId", storyId)
+            startActivity(intent)
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.story_not_found), Toast.LENGTH_SHORT).show()
         }
     }
 }

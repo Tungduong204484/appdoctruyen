@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.appctruyn.model.Story
 
-class RankingAdapter(private val storyList: List<Story>) :
-    RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
+class RankingAdapter(
+    private val storyList: List<Story>,
+    private val onItemClick: (Story) -> Unit
+) : RecyclerView.Adapter<RankingAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivCover: ImageView = view.findViewById(R.id.ivCover)
@@ -39,7 +41,7 @@ class RankingAdapter(private val storyList: List<Story>) :
         holder.tvAuthor.text = story.author
         holder.tvCategory.text = "#${story.genre.uppercase()}"
         holder.tvRating.text = "★ ${story.rating}"
-        holder.tvValue.text = story.views.toString() // Or use another field depending on tab
+        holder.tvValue.text = story.views.toString()
 
         // Rank colors (1, 2, 3)
         val bg = holder.tvRank.background as GradientDrawable
@@ -54,6 +56,10 @@ class RankingAdapter(private val storyList: List<Story>) :
             .load(story.coverUrl)
             .placeholder(R.drawable.ic_launcher_background)
             .into(holder.ivCover)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(story)
+        }
     }
 
     override fun getItemCount() = storyList.size
