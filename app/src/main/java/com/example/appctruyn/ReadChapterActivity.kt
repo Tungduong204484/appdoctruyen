@@ -11,7 +11,6 @@ import com.example.appctruyn.databinding.DialogReadingSettingsBinding
 import com.example.appctruyn.model.Chapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class ReadChapterActivity : AppCompatActivity() {
 
@@ -19,7 +18,12 @@ class ReadChapterActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private var currentStoryId: String? = null
     private var currentChapterNumber: Int = 0
-    
+
+    // Thêm để lưu tủ truyện
+    private var storyTitle: String = ""
+    private var storyCoverUrl: String = ""
+    private var storyTotalChap: Int = 0
+
     private var textSize: Float = 18f
     private var isSerif: Boolean = false
 
@@ -38,6 +42,9 @@ class ReadChapterActivity : AppCompatActivity() {
             return
         }
 
+        // Lấy thông tin truyện để lưu vào tủ
+        fetchStoryMeta(currentStoryId!!)
+
         loadPreferences()
         applyReadingSettings()
         setupListeners()
@@ -49,9 +56,21 @@ class ReadChapterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Lấy metadata truyện (title, coverUrl, totalChapters) để lưu vào tủ truyện
+     */
+    private fun fetchStoryMeta(storyId: String) {
+        db.collection("stories").document(storyId).get()
+            .addOnSuccessListener { doc ->
+                storyTitle = doc.getString("title") ?: ""
+                storyCoverUrl = doc.getString("coverUrl") ?: ""
+                storyTotalChap = doc.getLong("totalChapters")?.toInt() ?: 0
+            }
+    }
+
     private fun setupListeners() {
         binding.toolbar.setNavigationOnClickListener { finish() }
-        
+
         binding.btnSettings.setOnClickListener {
             showSettingsDialog()
         }
@@ -126,24 +145,34 @@ class ReadChapterActivity : AppCompatActivity() {
     private fun displayChapter(chapter: Chapter) {
         binding.progressBar.visibility = View.GONE
         currentChapterNumber = chapter.number
-        
+
         binding.toolbar.title = getString(R.string.chapter_title_format, chapter.number, chapter.title)
         binding.tvChapterTitle.text = getString(R.string.chapter_title_format, chapter.number, chapter.title)
         binding.tvChapterContent.text = chapter.content.ifEmpty { getString(R.string.no_content) }
-        
+
         binding.nestedScrollView.smoothScrollTo(0, 0)
-        
+
         currentStoryId?.let {
+            // Lưu vị trí đọc (SharedPreferences ReaderPrefs - dùng cho nút "Đọc tiếp")
             saveLastReadChapter(it, chapter.id, chapter.number)
+
+            // Lưu vào Tủ Truyện (LibraryPrefs)
+            LibraryFragment.saveToHistory(
+                context = this,
+                storyId = it,
+                title = storyTitle,
+                coverUrl = storyCoverUrl,
+                lastChap = chapter.number,
+                totalChap = storyTotalChap
+            )
         }
-        
+
         updateNavigationButtons()
     }
 
     private fun updateNavigationButtons() {
         binding.btnPrevChapter.isEnabled = currentChapterNumber > 1
-        // We could query if next chapter exists, but for now we just enable it
-        binding.btnNextChapter.isEnabled = true 
+        binding.btnNextChapter.isEnabled = true
     }
 
     private fun saveLastReadChapter(storyId: String, chapterId: String, chapterNumber: Int) {

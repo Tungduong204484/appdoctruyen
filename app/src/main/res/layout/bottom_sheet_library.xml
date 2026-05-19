@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_surface"
+    android:orientation="vertical"
+    android:paddingBottom="32dp">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/divider" />
+
+    <!-- Header: ảnh + tên truyện -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            app:cardCornerRadius="6dp">
+
+            <ImageView
+                android:id="@+id/ivCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Tên truyện"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <!-- Tải truyện -->
+    <LinearLayout
+        android:id="@+id/btnDownload"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_download"
+            android:tint="@color/text_secondary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Tải truyện"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <!-- Xóa khỏi Tủ Truyện -->
+    <LinearLayout
+        android:id="@+id/btnDelete"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/text_secondary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Xóa khỏi Tủ Truyện"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <!-- Nhận thông báo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_notify_off"
+            android:tint="@color/text_secondary" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="Nhận thông báo"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp" />
+
+        <Switch
+            android:id="@+id/switchNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    android:orientation="vertical">
+
+    <!-- Tab Layout: Lịch sử / Đánh dấu -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/background_surface"
+        app:tabIndicatorColor="@color/accent_blue"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabSelectedTextColor="@color/accent_blue"
+        app:tabTextColor="@color/text_secondary"
+        app:tabTextAppearance="@style/RankingTabText" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Chưa có lịch sử đọc"
+        android:textColor="@color/text_secondary"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="4dp"
+        android:clipToPadding="false" />
+
+</LinearLayout>

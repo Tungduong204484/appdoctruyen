@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Kiểm tra đăng nhập ngay khi vào App
         if (!AuthManager.isLoggedIn) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
@@ -40,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             loadFragment(TatCaFragment())
+            bottomNav.selectedItemId = R.id.nav_explore
         }
 
         setupTopBar()
@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment) {
-        if (fragment is AccountFragment) {
-            appBarLayout.visibility = View.GONE
-        } else {
-            appBarLayout.visibility = View.VISIBLE
+        // Ẩn AppBar với Account và Library (chúng có header riêng)
+        appBarLayout.visibility = when (fragment) {
+            is AccountFragment, is LibraryFragment -> View.GONE
+            else -> View.VISIBLE
         }
 
         supportFragmentManager.beginTransaction()
@@ -73,12 +73,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNav() {
-        bottomNav.selectedItemId = R.id.nav_explore
-
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_library -> {
-                    Toast.makeText(this, getString(R.string.nav_library), Toast.LENGTH_SHORT).show()
+                    loadFragment(LibraryFragment())
                     true
                 }
                 R.id.nav_explore -> {
