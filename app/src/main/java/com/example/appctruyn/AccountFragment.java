@@ -1,5 +1,6 @@
 package com.example.appctruyn;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,14 +34,13 @@ import java.util.concurrent.Executors;
 
 public class AccountFragment extends Fragment {
 
-    private TextView tvCurrentTheme;
     private ImageView ivAvatar;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private final ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
-                if (uri != null) {
+                if (uri != null && isAdded()) {
                     processAndUploadAvatar(uri);
                 }
             }
@@ -56,194 +56,151 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView tvName = view.findViewById(R.id.tvUserName);
-        TextView tvEmail = view.findViewById(R.id.tvUserEmail);
-        TextView tvRoleBadge = view.findViewById(R.id.tvRoleBadge);
-        LinearLayout layoutAuthorMenu = view.findViewById(R.id.layoutAuthorMenu);
-        LinearLayout layoutAdminMenu = view.findViewById(R.id.layoutAdminMenu);
+        final TextView tvName = view.findViewById(R.id.tvUserName);
+        final TextView tvEmail = view.findViewById(R.id.tvUserEmail);
+        final TextView tvRoleBadge = view.findViewById(R.id.tvRoleBadge);
+        final LinearLayout layoutAuthorMenu = view.findViewById(R.id.layoutAuthorMenu);
+        final LinearLayout layoutAdminMenu = view.findViewById(R.id.layoutAdminMenu);
         Button btnLogout = view.findViewById(R.id.btnLogout);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         View btnEditAvatar = view.findViewById(R.id.btnEditAvatar);
 
-        tvCurrentTheme = view.findViewById(R.id.tvCurrentTheme);
-        View btnThemeMode = view.findViewById(R.id.btnThemeMode);
-
-        updateThemeText();
-
-        btnThemeMode.setOnClickListener(v -> showThemeSelectionDialog());
-
         btnEditAvatar.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
         AuthManager.getCurrentUserInfo().addOnCompleteListener(task -> {
+            if (!isAdded()) return;
+            Context context = getContext();
+            if (context == null) return;
+            
             if (task.isSuccessful() && task.getResult() != null) {
                 User user = task.getResult();
-                String displayName = user.getDisplayName();
-                tvName.setText((displayName == null || displayName.isEmpty()) ? getString(R.string.user_default_name) : displayName);
-                tvEmail.setText(user.getEmail());
+                
+                if (tvName != null) {
+                    String displayName = user.getDisplayName();
+                    tvName.setText((displayName == null || displayName.isEmpty()) ? context.getString(R.string.user_default_name) : displayName);
+                }
+                if (tvEmail != null) tvEmail.setText(user.getEmail());
 
                 loadAvatar(user.getAvatarUrl());
 
                 String role = user.getRole();
-                if ("author".equals(role)) {
-                    tvRoleBadge.setText(getString(R.string.role_author_label));
-                    tvRoleBadge.setBackgroundResource(R.drawable.bg_badge_author);
-                    layoutAuthorMenu.setVisibility(View.VISIBLE);
-                    layoutAdminMenu.setVisibility(View.GONE);
-                } else if ("admin".equals(role)) {
-                    tvRoleBadge.setText(getString(R.string.role_admin_label));
-                    tvRoleBadge.setBackgroundResource(R.drawable.bg_badge_admin);
-                    layoutAuthorMenu.setVisibility(View.VISIBLE);
-                    layoutAdminMenu.setVisibility(View.VISIBLE);
-                } else {
-                    tvRoleBadge.setText(getString(R.string.role_reader_label));
-                    tvRoleBadge.setBackgroundResource(R.drawable.bg_badge_reader);
-                    layoutAuthorMenu.setVisibility(View.GONE);
-                    layoutAdminMenu.setVisibility(View.GONE);
+                if (tvRoleBadge != null && layoutAuthorMenu != null && layoutAdminMenu != null) {
+                    if ("author".equals(role)) {
+                        tvRoleBadge.setText(context.getString(R.string.role_author_label));
+                        tvRoleBadge.setBackgroundResource(R.drawable.bg_badge_author);
+                        layoutAuthorMenu.setVisibility(View.VISIBLE);
+                        layoutAdminMenu.setVisibility(View.GONE);
+                    } else if ("admin".equals(role)) {
+                        tvRoleBadge.setText(context.getString(R.string.role_admin_label));
+                        tvRoleBadge.setBackgroundResource(R.drawable.bg_badge_admin);
+                        layoutAuthorMenu.setVisibility(View.VISIBLE);
+                        layoutAdminMenu.setVisibility(View.VISIBLE);
+                    } else {
+                        tvRoleBadge.setText(context.getString(R.string.role_reader_label));
+                        tvRoleBadge.setBackgroundResource(R.drawable.bg_badge_reader);
+                        layoutAuthorMenu.setVisibility(View.GONE);
+                        layoutAdminMenu.setVisibility(View.GONE);
+                    }
                 }
             }
         });
 
-        View btnManageUsers = view.findViewById(R.id.btnManageUsers);
-        if (btnManageUsers != null) {
-            btnManageUsers.setOnClickListener(v -> {
-                startActivity(new Intent(requireContext(), AdminManageUsersActivity.class));
-            });
-        }
-
-        View btnMyStories = view.findViewById(R.id.btnMyStories);
-        if (btnMyStories != null) {
-            btnMyStories.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), getString(R.string.manage_stories_coming_soon), Toast.LENGTH_SHORT).show();
-            });
-        }
-
-        View btnAddStory = view.findViewById(R.id.btnAddStory);
-        if (btnAddStory != null) {
-            btnAddStory.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), getString(R.string.add_story_coming_soon), Toast.LENGTH_SHORT).show();
-            });
-        }
-
         btnLogout.setOnClickListener(v -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.logout))
-                    .setMessage(getString(R.string.logout_confirm))
-                    .setPositiveButton(getString(R.string.logout), (dialog, which) -> {
+            Context context = getContext();
+            if (context == null) return;
+            new AlertDialog.Builder(context)
+                    .setTitle(context.getString(R.string.logout))
+                    .setMessage(context.getString(R.string.logout_confirm))
+                    .setPositiveButton(context.getString(R.string.logout), (dialog, which) -> {
                         AuthManager.logout();
-                        startActivity(new Intent(requireContext(), LoginActivity.class));
-                        requireActivity().finishAffinity();
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        startActivity(intent);
+                        if (getActivity() != null) getActivity().finishAffinity();
                     })
-                    .setNegativeButton(getString(R.string.cancel), null)
+                    .setNegativeButton(context.getString(R.string.cancel), null)
                     .show();
         });
     }
 
     private void loadAvatar(String avatarData) {
+        if (!isAdded() || ivAvatar == null) return;
         if (avatarData == null) {
             ivAvatar.setImageResource(R.drawable.ic_nav_account);
             return;
         }
 
-        if (avatarData.startsWith("data:image") || isBase64(avatarData)) {
-            String cleanBase64 = avatarData.contains(",") ? avatarData.split(",")[1] : avatarData;
-            try {
+        try {
+            if (avatarData.startsWith("data:image") || isBase64(avatarData)) {
+                String cleanBase64 = avatarData.contains(",") ? avatarData.split(",")[1] : avatarData;
                 byte[] imageBytes = Base64.decode(cleanBase64, Base64.DEFAULT);
                 Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
                 Glide.with(this).load(decodedImage).circleCrop().into(ivAvatar);
-            } catch (Exception e) {
-                ivAvatar.setImageResource(R.drawable.ic_nav_account);
+            } else {
+                Glide.with(this).load(avatarData).placeholder(R.drawable.ic_nav_account).circleCrop().into(ivAvatar);
             }
-        } else {
-            Glide.with(this).load(avatarData).placeholder(R.drawable.ic_nav_account).circleCrop().into(ivAvatar);
+        } catch (Exception e) {
+            if (isAdded() && ivAvatar != null) ivAvatar.setImageResource(R.drawable.ic_nav_account);
         }
     }
 
     private boolean isBase64(String s) {
-        try {
-            Base64.decode(s, Base64.DEFAULT);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        try { Base64.decode(s, Base64.DEFAULT); return true; } catch (Exception e) { return false; }
     }
 
     private void processAndUploadAvatar(Uri uri) {
         executorService.execute(() -> {
             try {
+                if (!isAdded()) return;
                 String base64String = uriToBase64(uri);
-                if (base64String != null) {
+                if (base64String != null && getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        if (!isAdded()) return;
                         AuthManager.updateAvatarBase64(base64String).addOnCompleteListener(task -> {
+                            if (!isAdded()) return;
+                            Context context = getContext();
+                            if (context == null) return;
+                            
                             if (task.isSuccessful()) {
                                 loadAvatar(base64String);
-                                Toast.makeText(requireContext(), getString(R.string.update_avatar_success), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getString(R.string.update_avatar_success), Toast.LENGTH_SHORT).show();
                             } else {
-                                String errorMsg = getString(R.string.update_avatar_fail, task.getException().getMessage());
-                                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, context.getString(R.string.update_avatar_fail, "Error"), Toast.LENGTH_SHORT).show();
                             }
                         });
                     });
                 }
             } catch (Exception e) {
-                getActivity().runOnUiThread(() -> 
-                    Toast.makeText(requireContext(), getString(R.string.err_unknown), Toast.LENGTH_SHORT).show()
-                );
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (isAdded()) {
+                            Context context = getContext();
+                            if (context != null) Toast.makeText(context, context.getString(R.string.err_unknown), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
     }
 
     private String uriToBase64(Uri uri) {
         try {
-            InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+            if (!isAdded()) return null;
+            Context context = getContext();
+            if (context == null) return null;
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream == null) return null;
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            Bitmap resizedBitmap = resizeBitmap(bitmap, 400);
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 400, (int)(bitmap.getHeight()*(400f/bitmap.getWidth())), false);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
-            byte[] byteArray = outputStream.toByteArray();
-            return "data:image/jpeg;base64," + Base64.encodeToString(byteArray, Base64.DEFAULT);
-        } catch (Exception e) {
-            return null;
-        }
+            return "data:image/jpeg;base64," + Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+        } catch (Exception e) { return null; }
     }
 
-    private Bitmap resizeBitmap(Bitmap source, int maxLength) {
-        int outWidth;
-        int outHeight;
-        int inWidth = source.getWidth();
-        int inHeight = source.getHeight();
-        if (inWidth > inHeight) {
-            outWidth = maxLength;
-            outHeight = (int) ((float) inHeight / inWidth * maxLength);
-        } else {
-            outHeight = maxLength;
-            outWidth = (int) ((float) inWidth / inHeight * maxLength);
-        }
-        return Bitmap.createScaledBitmap(source, outWidth, outHeight, false);
-    }
-
-    private void updateThemeText() {
-        int currentMode = ThemeHelper.getThemePreference(requireContext());
-        tvCurrentTheme.setText(ThemeHelper.getThemeName(requireContext(), currentMode));
-    }
-
-    private void showThemeSelectionDialog() {
-        String[] options = {
-                getString(R.string.theme_light),
-                getString(R.string.theme_dark),
-                getString(R.string.theme_auto)
-        };
-        int currentMode = ThemeHelper.getThemePreference(requireContext());
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.theme_selection))
-                .setSingleChoiceItems(options, currentMode, (dialog, which) -> {
-                    ThemeHelper.setThemePreference(requireContext(), which);
-                    updateThemeText();
-                    dialog.dismiss();
-                    requireActivity().recreate();
-                })
-                .setNegativeButton(getString(R.string.cancel), null)
-                .show();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ivAvatar = null;
     }
 
     @Override

@@ -54,8 +54,8 @@
             android:valueFrom="14"
             android:valueTo="32"
             android:stepSize="1"
-            app:thumbColor="@color/accent_blue"
-            app:trackColorActive="@color/accent_blue" />
+            app:thumbColor="@color/primary"
+            app:trackColorActive="@color/primary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
             android:textColor="@color/text_primary" />
     </LinearLayout>
 
-    <!-- Font chữ (Coming soon or just a simple toggle) -->
+    <!-- Phông chữ -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         app:singleSelection="true"
         app:selectionRequired="true"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="24dp">
 
         <Button
             android:id="@+id/btnFontSans"
@@ -88,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Sans"
+            android:text="Không chân"
             android:textAllCaps="false" />
 
         <Button
@@ -97,7 +97,52 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Serif"
+            android:text="Có chân"
+            android:textAllCaps="false" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Chế độ đọc -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chế độ đọc"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/btnThemeLight"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sáng"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnThemeSepia"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Giấy cũ"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnThemeDark"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tối"
             android:textAllCaps="false" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

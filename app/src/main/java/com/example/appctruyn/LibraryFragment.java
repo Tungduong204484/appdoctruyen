@@ -142,7 +142,7 @@ public class LibraryFragment extends Fragment {
         });
         sheet.setOnBookmarkToggleListener(isBookmarked -> {
             if (isBookmarked) {
-                addBookmark(item);
+                addBookmark(getContext(), item);
             } else {
                 removeBookmark(item.getStoryId());
             }
@@ -159,22 +159,8 @@ public class LibraryFragment extends Fragment {
         Toast.makeText(requireContext(), getString(R.string.library_removed), Toast.LENGTH_SHORT).show();
     }
 
-    private void addBookmark(LibraryStory item) {
-        if (getContext() == null) return;
-        SharedPreferences prefs = getContext().getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("bookmark_list", "[]")));
-        boolean alreadyExists = false;
-        for (LibraryStory s : list) {
-            if (s.getStoryId().equals(item.getStoryId())) {
-                alreadyExists = true;
-                break;
-            }
-        }
-        if (!alreadyExists) {
-            list.add(0, item);
-            prefs.edit().putString("bookmark_list", toHistoryJson(list)).apply();
-            Toast.makeText(requireContext(), getString(R.string.library_added_bookmark), Toast.LENGTH_SHORT).show();
-        }
+    private void addBookmarkInternal(LibraryStory item) {
+        addBookmark(getContext(), item);
     }
 
     private void removeBookmark(String storyId) {
@@ -270,6 +256,9 @@ public class LibraryFragment extends Fragment {
         return sb.toString();
     }
 
+    /**
+     * Lưu vào Lịch sử đọc
+     */
     public static void saveToHistory(Context context, String storyId, String title, String coverUrl, int lastChap, int totalChap) {
         SharedPreferences prefs = context.getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
         List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("history_list", "[]")));
@@ -285,5 +274,30 @@ public class LibraryFragment extends Fragment {
             list = list.subList(0, 100);
         }
         prefs.edit().putString("history_list", toHistoryJson(list)).apply();
+    }
+
+    /**
+     * Thêm vào Đánh dấu (Tủ truyện)
+     */
+    public static void addBookmark(Context context, LibraryStory item) {
+        if (context == null) return;
+        SharedPreferences prefs = context.getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
+        List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("bookmark_list", "[]")));
+        
+        boolean alreadyExists = false;
+        for (LibraryStory s : list) {
+            if (s.getStoryId().equals(item.getStoryId())) {
+                alreadyExists = true;
+                break;
+            }
+        }
+        
+        if (!alreadyExists) {
+            list.add(0, item);
+            prefs.edit().putString("bookmark_list", toHistoryJson(list)).apply();
+            Toast.makeText(context, context.getString(R.string.library_added_bookmark), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Truyện đã có trong tủ", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -2,27 +2,32 @@
 <resources>
 
     <style name="Base.Theme.Appctruyn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Màu nền & status bar -->
+        <!-- Main background & status bar -->
         <item name="android:windowBackground">@color/background_main</item>
-        <item name="android:statusBarColor">@color/background_main</item>
-        <item name="android:navigationBarColor">@color/bg_bottomnav</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/background_surface</item>
+        <item name="android:navigationBarColor">@color/background_surface</item>
+        <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Material color -->
-        <item name="colorPrimary">@color/accent_blue</item>
-        <item name="colorPrimaryVariant">@color/accent_blue</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+
+        <!-- Surface and background colors -->
         <item name="colorSurface">@color/background_surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="android:colorBackground">@color/background_main</item>
         <item name="colorOnBackground">@color/text_primary</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/accent_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Error colors -->
+        <item name="colorError">#EF4444</item>
+        <item name="colorOnError">@color/white</item>
     </style>
 
     <style name="Theme.Appctruyn" parent="Base.Theme.Appctruyn" />
-
-    <style name="RatingBarTheme" parent="Theme.AppCompat">
-        <item name="colorControlNormal">#949494</item>
-        <item name="colorControlActivated">#F1C40F</item>
-    </style>
 
 </resources>

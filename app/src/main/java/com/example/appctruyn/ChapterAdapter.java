@@ -1,6 +1,7 @@
 package com.example.appctruyn;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -36,18 +37,29 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chapter chapter = chapters.get(position);
         
-        // Hiển thị số thứ tự chương (1, 2, 3...)
+        // Display chapter index (1, 2, 3...)
         holder.binding.tvChapterIndex.setText(String.valueOf(position + 1));
         
-        // Hiển thị tiêu đề: "Chương X: Tên chương"
-        String titleText = "Chương " + chapter.getNumber() + ": " + chapter.getTitle();
-        holder.binding.tvChapterTitle.setText(titleText);
+        // Display title using string resource: "Chương %d: %s"
+        String title = chapter.getTitle();
+        if (title == null || title.isEmpty()) {
+            title = holder.itemView.getContext().getString(R.string.no_title);
+        }
         
-        // Hiển thị thời gian đăng chương
+        holder.binding.tvChapterTitle.setText(
+            holder.itemView.getContext().getString(R.string.chapter_title_format, chapter.getNumber(), title)
+        );
+        
+        // Display timestamp if available
         String timestamp = chapter.getTimestamp();
-        holder.binding.tvTimestamp.setText((timestamp != null && !timestamp.isEmpty()) ? "(" + timestamp + ")" : "");
+        if (timestamp != null && !timestamp.isEmpty()) {
+            holder.binding.tvTimestamp.setVisibility(View.VISIBLE);
+            holder.binding.tvTimestamp.setText(timestamp);
+        } else {
+            holder.binding.tvTimestamp.setVisibility(View.GONE);
+        }
         
-        // Sự kiện click để mở màn hình đọc truyện
+        // Click listener for reading
         holder.binding.getRoot().setOnClickListener(v -> {
             if (onItemClick != null) {
                 onItemClick.onItemClick(chapter);

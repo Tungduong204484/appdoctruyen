@@ -1,20 +1,29 @@
 package com.example.appctruyn;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.appctruyn.databinding.ActivityReadChapterBinding;
 import com.example.appctruyn.databinding.DialogReadingSettingsBinding;
+import com.example.appctruyn.databinding.LayoutTocBottomSheetBinding;
 import com.example.appctruyn.model.Chapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReadChapterActivity extends AppCompatActivity {
 
@@ -29,6 +38,7 @@ public class ReadChapterActivity extends AppCompatActivity {
 
     private float textSize = 18f;
     private boolean isSerif = false;
+    private int themeMode = 2; // 0: Light, 1: Sepia, 2: Dark (default)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,23 +77,66 @@ public class ReadChapterActivity extends AppCompatActivity {
                         storyCoverUrl = doc.getString("coverUrl");
                         Long total = doc.getLong("totalChapters");
                         storyTotalChap = total != null ? total.intValue() : 0;
+                        updateNavigationButtons();
                     }
                 });
     }
 
     private void setupListeners() {
         binding.toolbar.setNavigationOnClickListener(v -> finish());
-
         binding.btnSettings.setOnClickListener(v -> showSettingsDialog());
-
         binding.btnPrevChapter.setOnClickListener(v -> navigateToChapter(currentChapterNumber - 1));
-
         binding.btnNextChapter.setOnClickListener(v -> navigateToChapter(currentChapterNumber + 1));
+        
+        binding.btnTOC.setOnClickListener(v -> showTOC());
+        
+        binding.btnShowComments.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CommentsActivity.class);
+            intent.putExtra("storyId", currentStoryId);
+            intent.putExtra("chapterNumber", currentChapterNumber);
+            startActivity(intent);
+        });
+    }
+
+    private void showTOC() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        LayoutTocBottomSheetBinding tocBinding = LayoutTocBottomSheetBinding.inflate(getLayoutInflater());
+        dialog.setContentView(tocBinding.getRoot());
+
+        List<Chapter> chapterList = new ArrayList<>();
+        ChapterAdapter adapter = new ChapterAdapter(chapterList, chapter -> {
+            loadChapterByNumber(chapter.getNumber());
+            dialog.dismiss();
+        });
+
+        tocBinding.rvTOC.setLayoutManager(new LinearLayoutManager(this));
+        tocBinding.rvTOC.setAdapter(adapter);
+
+        db.collection("stories").document(currentStoryId)
+                .collection("chapters")
+                .orderBy("number", Query.Direction.ASCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Chapter chapter = doc.toObject(Chapter.class);
+                        if (chapter != null) {
+                            chapter.setId(doc.getId());
+                            chapterList.add(chapter);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                });
+
+        dialog.show();
     }
 
     private void navigateToChapter(int number) {
         if (number < 1) {
             Toast.makeText(this, "Đây là chương đầu tiên", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (storyTotalChap > 0 && number > storyTotalChap) {
+            Toast.makeText(this, "Bạn đã đọc đến chương mới nhất", Toast.LENGTH_SHORT).show();
             return;
         }
         loadChapterByNumber(number);
@@ -108,7 +161,7 @@ public class ReadChapterActivity extends AppCompatActivity {
                             }
                         } else {
                             binding.progressBar.setVisibility(View.GONE);
-                            Toast.makeText(this, "Không tìm thấy chương này", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Chương này chưa cập nhật", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -143,26 +196,18 @@ public class ReadChapterActivity extends AppCompatActivity {
         binding.progressBar.setVisibility(View.GONE);
         currentChapterNumber = chapter.getNumber();
 
-        String title = getString(R.string.chapter_title_format, chapter.getNumber(), chapter.getTitle());
+        String title = "Chương " + chapter.getNumber() + ": " + chapter.getTitle();
         binding.toolbar.setTitle(title);
         binding.tvChapterTitle.setText(title);
         
         String content = chapter.getContent();
-        binding.tvChapterContent.setText((content == null || content.isEmpty()) ? getString(R.string.no_content) : content);
+        binding.tvChapterContent.setText((content == null || content.isEmpty()) ? "Nội dung đang được cập nhật..." : content);
 
         binding.nestedScrollView.smoothScrollTo(0, 0);
 
         if (currentStoryId != null) {
             saveLastReadChapter(currentStoryId, chapter.getId(), chapter.getNumber());
-
-            LibraryFragment.saveToHistory(
-                    this,
-                    currentStoryId,
-                    storyTitle,
-                    storyCoverUrl,
-                    chapter.getNumber(),
-                    storyTotalChap
-            );
+            LibraryFragment.saveToHistory(this, currentStoryId, storyTitle, storyCoverUrl, chapter.getNumber(), storyTotalChap);
         }
 
         updateNavigationButtons();
@@ -170,7 +215,12 @@ public class ReadChapterActivity extends AppCompatActivity {
 
     private void updateNavigationButtons() {
         binding.btnPrevChapter.setEnabled(currentChapterNumber > 1);
-        binding.btnNextChapter.setEnabled(true);
+        binding.btnNextChapter.setEnabled(storyTotalChap == 0 || currentChapterNumber < storyTotalChap);
+        
+        float alphaPrev = binding.btnPrevChapter.isEnabled() ? 1.0f : 0.5f;
+        float alphaNext = binding.btnNextChapter.isEnabled() ? 1.0f : 0.5f;
+        binding.btnPrevChapter.setAlpha(alphaPrev);
+        binding.btnNextChapter.setAlpha(alphaNext);
     }
 
     private void saveLastReadChapter(String storyId, String chapterId, int chapterNumber) {
@@ -186,9 +236,16 @@ public class ReadChapterActivity extends AppCompatActivity {
         DialogReadingSettingsBinding dialogBinding = DialogReadingSettingsBinding.inflate(getLayoutInflater());
         dialog.setContentView(dialogBinding.getRoot());
 
+        // Set initial values
         dialogBinding.sliderTextSize.setValue(textSize);
         dialogBinding.toggleFont.check(isSerif ? R.id.btnFontSerif : R.id.btnFontSans);
+        
+        int themeBtnId = R.id.btnThemeDark;
+        if (themeMode == 0) themeBtnId = R.id.btnThemeLight;
+        else if (themeMode == 1) themeBtnId = R.id.btnThemeSepia;
+        dialogBinding.toggleTheme.check(themeBtnId);
 
+        // Listeners
         dialogBinding.sliderTextSize.addOnChangeListener((slider, value, fromUser) -> {
             textSize = value;
             applyReadingSettings();
@@ -203,18 +260,72 @@ public class ReadChapterActivity extends AppCompatActivity {
             }
         });
 
+        dialogBinding.toggleTheme.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            if (isChecked) {
+                if (checkedId == R.id.btnThemeLight) themeMode = 0;
+                else if (checkedId == R.id.btnThemeSepia) themeMode = 1;
+                else themeMode = 2;
+                applyReadingSettings();
+                savePreferences();
+            }
+        });
+
         dialog.show();
     }
 
     private void applyReadingSettings() {
         binding.tvChapterContent.setTextSize(textSize);
         binding.tvChapterContent.setTypeface(isSerif ? Typeface.SERIF : Typeface.SANS_SERIF);
+
+        int bgColor, textColor, surfaceColor, dividerColor;
+        
+        if (themeMode == 0) { // Light
+            bgColor = Color.parseColor("#FFFFFF");
+            surfaceColor = Color.parseColor("#F1F5F9");
+            textColor = Color.parseColor("#1E293B");
+            dividerColor = Color.parseColor("#E2E8F0");
+        } else if (themeMode == 1) { // Sepia
+            bgColor = Color.parseColor("#F4ECD8");
+            surfaceColor = Color.parseColor("#E8DFCA");
+            textColor = Color.parseColor("#5B4636");
+            dividerColor = Color.parseColor("#D6CCB8");
+        } else { // Dark
+            bgColor = ContextCompat.getColor(this, R.color.background_main);
+            surfaceColor = ContextCompat.getColor(this, R.color.background_surface);
+            textColor = ContextCompat.getColor(this, R.color.text_primary);
+            dividerColor = ContextCompat.getColor(this, R.color.divider);
+        }
+
+        binding.mainLayout.setBackgroundColor(bgColor);
+        binding.nestedScrollView.setBackgroundColor(bgColor);
+        binding.appBar.setBackgroundColor(surfaceColor);
+        binding.toolbar.setBackgroundColor(surfaceColor);
+        binding.bottomControlCard.setCardBackgroundColor(surfaceColor);
+        
+        binding.tvChapterContent.setTextColor(textColor);
+        binding.toolbar.setTitleTextColor(textColor);
+        binding.tvChapterTitle.setTextColor(themeMode == 2 ? ContextCompat.getColor(this, R.color.primary) : textColor);
+        
+        // Cập nhật màu cho các nút điều hướng mới
+        binding.btnTOC.setTextColor(textColor);
+        binding.btnPrevChapter.setTextColor(textColor);
+        binding.btnNextChapter.setTextColor(themeMode == 2 ? ContextCompat.getColor(this, R.color.primary) : textColor);
+        
+        binding.titleDivider.setBackgroundColor(dividerColor);
+        binding.divider1.setBackgroundColor(dividerColor);
+        binding.divider2.setBackgroundColor(dividerColor);
+        
+        binding.btnShowComments.setTextColor(ContextCompat.getColor(this, R.color.primary));
+        
+        binding.btnSettings.setColorFilter(textColor);
+        binding.toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.primary));
     }
 
     private void loadPreferences() {
         SharedPreferences prefs = getSharedPreferences("ReadingSettings", Context.MODE_PRIVATE);
-        textSize = prefs.getFloat("text_size", 19f);
+        textSize = prefs.getFloat("text_size", 18f);
         isSerif = prefs.getBoolean("is_serif", false);
+        themeMode = prefs.getInt("theme_mode", 2);
     }
 
     private void savePreferences() {
@@ -222,6 +333,7 @@ public class ReadChapterActivity extends AppCompatActivity {
         prefs.edit()
                 .putFloat("text_size", textSize)
                 .putBoolean("is_serif", isSerif)
+                .putInt("theme_mode", themeMode)
                 .apply();
     }
 }

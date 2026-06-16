@@ -99,6 +99,12 @@
     <string name="size_small">A</string>
     <string name="size_large">A</string>
     <string name="first_chapter_toast">Đây là chương đầu tiên</string>
+    <string name="toc_title">Mục lục</string>
+    <string name="show_comments">Xem bình luận</string>
+    <string name="comments_title">Bình luận</string>
+    <string name="comment_hint">Viết bình luận...</string>
+    <string name="login_to_comment">Vui lòng đăng nhập để bình luận</string>
+    <string name="comment_error">Lỗi khi gửi bình luận</string>
 
     <!-- Library -->
     <string name="library_history">Lịch sử</string>
@@ -128,6 +134,8 @@
 
     <!-- Toasts / UI -->
     <string name="search_hint">Tìm kiếm truyện...</string>
+    <string name="search_empty">Nhập tên truyện để tìm kiếm</string>
+    <string name="search_no_results">Không tìm thấy kết quả nào</string>
     <string name="filter_genre">Lọc theo thể loại</string>
     <string name="filter_gender">Thay đổi bộ lọc giới tính</string>
     <string name="coming_soon">Tính năng sắp ra mắt</string>

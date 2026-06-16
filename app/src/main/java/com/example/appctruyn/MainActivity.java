@@ -64,9 +64,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTopBar() {
-        btnSearch.setOnClickListener(v -> 
-            Toast.makeText(this, getString(R.string.search_hint), Toast.LENGTH_SHORT).show()
-        );
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            startActivity(intent);
+        });
 
         btnFilter.setOnClickListener(v -> 
             Toast.makeText(this, getString(R.string.filter_genre), Toast.LENGTH_SHORT).show()

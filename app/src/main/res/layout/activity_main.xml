@@ -11,13 +11,13 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_dark"
+        android:background="@color/background_surface"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bg_dark"
+            android:layout_height="64dp"
+            android:background="@color/background_surface"
             android:paddingStart="12dp"
             android:paddingEnd="12dp">
 
@@ -27,23 +27,26 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/tvCurrentFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tất cả"
+                    android:text="Khám phá"
                     android:textColor="@color/text_primary"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginStart="4dp"
                     android:src="@drawable/ic_chevron_down"
-                    app:tint="@color/text_primary" />
+                    app:tint="@color/primary" />
             </LinearLayout>
 
             <LinearLayout
@@ -54,20 +57,20 @@
 
                 <ImageView
                     android:id="@+id/btnSearch"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/bg_icon_btn"
-                    android:padding="9dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
                     android:src="@drawable/ic_search"
                     app:tint="@color/text_primary" />
 
                 <ImageView
                     android:id="@+id/btnFilter"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="2dp"
-                    android:background="@drawable/bg_icon_btn"
-                    android:padding="9dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="10dp"
                     android:src="@drawable/ic_filter"
                     app:tint="@color/text_primary" />
             </LinearLayout>
@@ -82,14 +85,17 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/divider"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_dark"
+        android:background="@color/background_surface"
         app:itemIconTint="@color/bottom_nav_icon_color"
         app:itemTextColor="@color/bottom_nav_text_color"
         app:labelVisibilityMode="labeled"
+        app:elevation="8dp"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

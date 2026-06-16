@@ -1,98 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main">
 
-    <!-- Custom Toolbar: Fixed Back Arrow (<) and Settings Gear Icon -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/background_surface"
-        android:elevation="4dp"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="@color/accent_blue"
-        app:titleTextColor="@color/text_primary"
-        app:titleCentered="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="Đang tải...">
+        app:elevation="0dp">
 
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="6dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_settings"
-            app:tint="@color/text_secondary"
-            android:contentDescription="@string/reading_settings" />
-    </com.google.android.material.appbar.MaterialToolbar>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/primary"
+            app:titleTextColor="@color/text_primary"
+            app:titleCentered="true"
+            app:title="@string/loading">
+
+            <ImageButton
+                android:id="@+id/btnSettings"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:src="@drawable/ic_settings"
+                app:tint="@color/text_secondary"
+                android:contentDescription="@string/reading_settings" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        app:layout_constraintBottom_toTopOf="@+id/bottomControl"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingHorizontal="24dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="120dp">
 
             <TextView
                 android:id="@+id/tvChapterTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:lineSpacingExtra="10dp"
-                android:paddingBottom="32dp"
-                android:textColor="@color/accent_blue"
-                android:textSize="22sp"
+                android:textColor="@color/primary"
+                android:textSize="24sp"
                 android:textStyle="bold"
+                android:lineSpacingExtra="8dp"
                 tools:text="Chương 1: Khởi đầu" />
+
+            <View
+                android:id="@+id/titleDivider"
+                android:layout_width="60dp"
+                android:layout_height="3dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="40dp"
+                android:background="@color/divider" />
 
             <TextView
                 android:id="@+id/tvChapterContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.4"
+                android:lineSpacingMultiplier="1.6"
                 android:textColor="@color/text_primary"
                 android:textSize="18sp"
-                android:fontFamily="sans-serif"
-                tools:text="Nội dung truyện chữ sẽ hiển thị ở đây với khoảng cách dòng hợp lý để dễ đọc hơn..." />
+                android:fontFamily="sans-serif-light"
+                tools:text="Nội dung truyện sẽ hiển thị ở đây..." />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="1dp"
+                android:layout_marginTop="40dp"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/btnShowComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:text="Xem bình luận"
+                android:textAlignment="center"
+                android:textColor="@color/primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Control Bar: Removed redundant icons to clean up -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/bottomControl"
+    <!-- Floating Bottom Navigation -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottomControlCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
         app:cardBackgroundColor="@color/background_surface"
-        app:cardElevation="16dp"
-        app:cardCornerRadius="0dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:cardCornerRadius="30dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/divider">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="12dp">
+            android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPrevChapter"
@@ -101,15 +129,40 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/prev_chapter"
-                android:textSize="11sp"
                 android:textAllCaps="false"
-                android:textColor="@color/text_secondary" />
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                app:icon="@drawable/ic_chevron_left"
+                app:iconTint="@color/text_secondary"
+                app:rippleColor="#1A64748B"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"/>
 
             <View
+                android:id="@+id/divider1"
                 android:layout_width="1dp"
-                android:layout_height="18dp"
-                android:background="@color/divider"
-                android:layout_marginHorizontal="8dp" />
+                android:layout_height="24dp"
+                android:background="@color/divider" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTOC"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:text="Mục lục"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                app:rippleColor="#1A64748B"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"/>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:background="@color/divider" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnNextChapter"
@@ -118,20 +171,24 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/next_chapter"
-                android:textSize="11sp"
                 android:textAllCaps="false"
-                android:textColor="@color/accent_blue" />
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary"
+                app:icon="@drawable/ic_chevron_right"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/primary"
+                app:rippleColor="#1AF59E0B"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

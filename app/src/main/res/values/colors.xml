@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Nền và bề mặt -->
-    <color name="background_main">#F8F9FA</color>
-    <color name="background_surface">#FFFFFF</color>
-    <color name="bg_bottomnav">#FFFFFF</color>
+    <!-- Modern Dark/Deep Theme Palette -->
+    <color name="primary">#F59E0B</color> <!-- Amber/Gold for primary actions -->
+    <color name="primary_variant">#D97706</color>
+    <color name="on_primary">#FFFFFF</color>
 
-    <!-- Chữ -->
-    <color name="text_primary">#1A1C1F</color>
-    <color name="text_secondary">#6C757D</color>
+    <color name="background_main">#0F172A</color> <!-- Deep Slate Blue -->
+    <color name="background_surface">#1E293B</color> <!-- Lighter Slate for Cards -->
+    <color name="bg_card">#1E293B</color>
 
-    <!-- Các thành phần khác -->
-    <color name="divider">#E0E0E0</color>
-    <color name="accent_blue">#1E90FF</color>
-    <color name="nav_active">#1E90FF</color>
-    <color name="nav_inactive">#8E8E93</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_muted">#64748B</color>
 
-    <!-- Avatar -->
-    <color name="bg_avatar_purple_color">#6B3FA0</color>
-    <color name="bg_avatar_blue_color">#1E6FD9</color>
+    <color name="divider">#334155</color>
+    <color name="accent_blue">#38BDF8</color>
 
-    <!-- Reading Mode Colors -->
-    <color name="read_bg">#FDF6E3</color>
-    <color name="read_text">#2C3E50</color>
+    <color name="nav_active">#F59E0B</color>
+    <color name="nav_inactive">#64748B</color>
 
-    <!-- Legacy / Compatibility (Avoid breaks) -->
-    <color name="bg_dark">@color/background_main</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Rating & Status -->
+    <color name="rating_star">#FBBF24</color>
+    <color name="status_ongoing">#10B981</color>
+    <color name="status_completed">#3B82F6</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Legacy compatibility -->
+    <color name="purple_200">#FBBF24</color>
+    <color name="purple_500">#F59E0B</color>
+    <color name="purple_700">#D97706</color>
+    <color name="teal_200">#38BDF8</color>
+    <color name="teal_700">#0284C7</color>
 </resources>
