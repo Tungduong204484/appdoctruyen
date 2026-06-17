@@ -2,8 +2,8 @@ package com.example.appctruyn;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appctruyn.model.LibraryStory;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 public class LibraryFragment extends Fragment {
 
@@ -30,6 +36,8 @@ public class LibraryFragment extends Fragment {
     private RecyclerView rvLibrary;
     private TextView tvEmpty;
     private LibraryAdapter libraryAdapter;
+    private final List<LibraryStory> displayList = new ArrayList<>();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Nullable
     @Override
@@ -46,27 +54,29 @@ public class LibraryFragment extends Fragment {
         tvEmpty = view.findViewById(R.id.tvEmpty);
 
         rvLibrary.setLayoutManager(new LinearLayoutManager(requireContext()));
+        libraryAdapter = new LibraryAdapter(displayList, 
+            item -> {
+                Intent intent = new Intent(requireContext(), StoryDetailActivity.class);
+                intent.putExtra("storyId", item.getStoryId());
+                startActivity(intent);
+            },
+            (item, anchor) -> showStoryMenu(item)
+        );
+        rvLibrary.setAdapter(libraryAdapter);
 
         setupTabs();
-        loadHistory();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Reload khi quay lại fragment để cập nhật lịch sử mới nhất
-        int currentTab = tabLayout.getSelectedTabPosition();
-        if (currentTab == 0) loadHistory(); else loadBookmarks();
+        loadDataFromFirestore(true); // Mặc định load Lịch sử
     }
 
     private void setupTabs() {
+        tabLayout.removeAllTabs();
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.library_history)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.library_bookmarks)));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) loadHistory(); else loadBookmarks();
+                loadDataFromFirestore(tab.getPosition() == 0);
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {}
@@ -75,57 +85,38 @@ public class LibraryFragment extends Fragment {
         });
     }
 
-    private void loadHistory() {
-        if (getContext() == null) return;
-        SharedPreferences prefs = getContext().getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        String historyJson = prefs.getString("history_list", "[]");
-
-        List<LibraryStory> historyItems = parseHistoryJson(historyJson);
-
-        if (historyItems.isEmpty()) {
-            showEmpty(getString(R.string.library_empty_history));
+    private void loadDataFromFirestore(boolean isHistory) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            showEmpty(getString(R.string.login_hint));
             return;
         }
 
-        tvEmpty.setVisibility(View.GONE);
-        rvLibrary.setVisibility(View.VISIBLE);
-
-        libraryAdapter = new LibraryAdapter(
-            historyItems,
-            item -> {
-                Intent intent = new Intent(requireContext(), StoryDetailActivity.class);
-                intent.putExtra("storyId", item.getStoryId());
-                startActivity(intent);
-            },
-            (item, anchor) -> showStoryMenu(item)
-        );
-        rvLibrary.setAdapter(libraryAdapter);
-    }
-
-    private void loadBookmarks() {
-        if (getContext() == null) return;
-        SharedPreferences prefs = getContext().getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        String bookmarkJson = prefs.getString("bookmark_list", "[]");
-        List<LibraryStory> bookmarks = parseHistoryJson(bookmarkJson);
-
-        if (bookmarks.isEmpty()) {
-            showEmpty(getString(R.string.library_empty_bookmarks));
-            return;
-        }
-
-        tvEmpty.setVisibility(View.GONE);
-        rvLibrary.setVisibility(View.VISIBLE);
-
-        libraryAdapter = new LibraryAdapter(
-            bookmarks,
-            item -> {
-                Intent intent = new Intent(requireContext(), StoryDetailActivity.class);
-                intent.putExtra("storyId", item.getStoryId());
-                startActivity(intent);
-            },
-            (item, anchor) -> showStoryMenu(item)
-        );
-        rvLibrary.setAdapter(libraryAdapter);
+        String collectionName = isHistory ? "history" : "bookmarks";
+        db.collection("users").document(user.getUid())
+                .collection(collectionName)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e("LibrarySync", "Error loading library", error);
+                        return;
+                    }
+                    if (value != null) {
+                        displayList.clear();
+                        for (QueryDocumentSnapshot doc : value) {
+                            LibraryStory item = doc.toObject(LibraryStory.class);
+                            displayList.add(item);
+                        }
+                        
+                        if (displayList.isEmpty()) {
+                            showEmpty(isHistory ? getString(R.string.library_empty_history) : getString(R.string.library_empty_bookmarks));
+                        } else {
+                            tvEmpty.setVisibility(View.GONE);
+                            rvLibrary.setVisibility(View.VISIBLE);
+                            libraryAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     private void showEmpty(String msg) {
@@ -136,168 +127,73 @@ public class LibraryFragment extends Fragment {
 
     private void showStoryMenu(LibraryStory item) {
         LibraryBottomSheet sheet = LibraryBottomSheet.newInstance(item);
-        sheet.setOnDeleteClickListener(() -> {
-            removeFromHistory(item.getStoryId());
-            loadHistory();
-        });
+        sheet.setOnDeleteClickListener(() -> removeFromHistory(item.getStoryId()));
         sheet.setOnBookmarkToggleListener(isBookmarked -> {
-            if (isBookmarked) {
-                addBookmark(getContext(), item);
-            } else {
-                removeBookmark(item.getStoryId());
-            }
+            if (isBookmarked) addBookmark(getContext(), item);
+            else removeBookmark(item.getStoryId());
         });
         sheet.show(getChildFragmentManager(), "LibraryMenu");
     }
 
     private void removeFromHistory(String storyId) {
-        if (getContext() == null) return;
-        SharedPreferences prefs = getContext().getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("history_list", "[]")));
-        list.removeIf(it -> it.getStoryId().equals(storyId));
-        prefs.edit().putString("history_list", toHistoryJson(list)).apply();
-        Toast.makeText(requireContext(), getString(R.string.library_removed), Toast.LENGTH_SHORT).show();
-    }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
 
-    private void addBookmarkInternal(LibraryStory item) {
-        addBookmark(getContext(), item);
+        db.collection("users").document(user.getUid())
+                .collection("history").document(storyId)
+                .delete()
+                .addOnSuccessListener(aVoid -> Toast.makeText(requireContext(), getString(R.string.library_removed), Toast.LENGTH_SHORT).show());
     }
 
     private void removeBookmark(String storyId) {
-        if (getContext() == null) return;
-        SharedPreferences prefs = getContext().getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("bookmark_list", "[]")));
-        list.removeIf(it -> it.getStoryId().equals(storyId));
-        prefs.edit().putString("bookmark_list", toHistoryJson(list)).apply();
-    }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
 
-    // JSON helpers
-    public static List<LibraryStory> parseHistoryJson(String json) {
-        try {
-            List<LibraryStory> result = new ArrayList<>();
-            if (json == null || json.equals("[]") || json.trim().isEmpty()) return result;
-            String trimmed = json.trim();
-            if (trimmed.startsWith("[")) trimmed = trimmed.substring(1);
-            if (trimmed.endsWith("]")) trimmed = trimmed.substring(0, trimmed.length() - 1);
-            
-            List<String> items = splitJsonObjects(trimmed);
-            for (String item : items) {
-                String storyId = extractField(item, "storyId");
-                String title = extractField(item, "title");
-                String coverUrl = extractField(item, "coverUrl");
-                String lastChapStr = extractField(item, "lastChap");
-                String totalChapStr = extractField(item, "totalChap");
-                int lastChap = 0;
-                int totalChap = 0;
-                try {
-                    lastChap = Integer.parseInt(lastChapStr);
-                    totalChap = Integer.parseInt(totalChapStr);
-                } catch (NumberFormatException ignored) {}
-                
-                boolean notifyEnabled = "true".equals(extractField(item, "notifyEnabled"));
-                if (!storyId.isEmpty()) {
-                    result.add(new LibraryStory(storyId, title, coverUrl, lastChap, totalChap, notifyEnabled));
-                }
-            }
-            return result;
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-    }
-
-    private static String extractField(String json, String key) {
-        String regex = "\"" + key + "\"\\s*:\\s*\"([^\"]*)\"|\"" + key + "\"\\s*:\\s*([^,}]*)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(json);
-        if (matcher.find()) {
-            String val1 = matcher.group(1);
-            if (val1 != null && !val1.isEmpty()) return val1;
-            String val2 = matcher.group(2);
-            if (val2 != null) return val2.trim();
-        }
-        return "";
-    }
-
-    private static List<String> splitJsonObjects(String s) {
-        List<String> result = new ArrayList<>();
-        int depth = 0;
-        int start = -1;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c == '{') {
-                if (depth == 0) start = i;
-                depth++;
-            } else if (c == '}') {
-                depth--;
-                if (depth == 0 && start != -1) {
-                    result.add(s.substring(start, i + 1));
-                    start = -1;
-                }
-            }
-        }
-        return result;
-    }
-
-    public static String toHistoryJson(List<LibraryStory> list) {
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < list.size(); i++) {
-            LibraryStory item = list.get(i);
-            sb.append("{")
-                .append("\"storyId\":\"").append(item.getStoryId()).append("\",")
-                .append("\"title\":\"").append(item.getTitle()).append("\",")
-                .append("\"coverUrl\":\"").append(item.getCoverUrl()).append("\",")
-                .append("\"lastChap\":").append(item.getLastChap()).append(",")
-                .append("\"totalChap\":").append(item.getTotalChap()).append(",")
-                .append("\"notifyEnabled\":").append(item.isNotifyEnabled())
-                .append("}");
-            if (i < list.size() - 1) sb.append(",");
-        }
-        sb.append("]");
-        return sb.toString();
+        db.collection("users").document(user.getUid())
+                .collection("bookmarks").document(storyId)
+                .delete();
     }
 
     /**
-     * Lưu vào Lịch sử đọc
+     * Lưu vào Lịch sử đọc lên Firebase
      */
     public static void saveToHistory(Context context, String storyId, String title, String coverUrl, int lastChap, int totalChap) {
-        SharedPreferences prefs = context.getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("history_list", "[]")));
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
 
-        // Xóa nếu đã có rồi (để đưa lên đầu)
-        list.removeIf(it -> it.getStoryId().equals(storyId));
+        Map<String, Object> data = new HashMap<>();
+        data.put("storyId", storyId);
+        data.put("title", title);
+        data.put("coverUrl", coverUrl);
+        data.put("lastChap", lastChap);
+        data.put("totalChap", totalChap);
+        data.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
 
-        // Thêm vào đầu danh sách
-        list.add(0, new LibraryStory(storyId, title, coverUrl, lastChap, totalChap, false));
-
-        // Giới hạn 100 truyện
-        if (list.size() > 100) {
-            list = list.subList(0, 100);
-        }
-        prefs.edit().putString("history_list", toHistoryJson(list)).apply();
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .collection("history").document(storyId)
+                .set(data);
     }
 
     /**
-     * Thêm vào Đánh dấu (Tủ truyện)
+     * Thêm vào Đánh dấu (Tủ truyện) lên Firebase
      */
     public static void addBookmark(Context context, LibraryStory item) {
-        if (context == null) return;
-        SharedPreferences prefs = context.getSharedPreferences("LibraryPrefs", Context.MODE_PRIVATE);
-        List<LibraryStory> list = new ArrayList<>(parseHistoryJson(prefs.getString("bookmark_list", "[]")));
-        
-        boolean alreadyExists = false;
-        for (LibraryStory s : list) {
-            if (s.getStoryId().equals(item.getStoryId())) {
-                alreadyExists = true;
-                break;
-            }
-        }
-        
-        if (!alreadyExists) {
-            list.add(0, item);
-            prefs.edit().putString("bookmark_list", toHistoryJson(list)).apply();
-            Toast.makeText(context, context.getString(R.string.library_added_bookmark), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Truyện đã có trong tủ", Toast.LENGTH_SHORT).show();
-        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("storyId", item.getStoryId());
+        data.put("title", item.getTitle());
+        data.put("coverUrl", item.getCoverUrl());
+        data.put("lastChap", item.getLastChap());
+        data.put("totalChap", item.getTotalChap());
+        data.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .collection("bookmarks").document(item.getStoryId())
+                .set(data)
+                .addOnSuccessListener(aVoid -> {
+                    if (context != null) Toast.makeText(context, context.getString(R.string.library_added_bookmark), Toast.LENGTH_SHORT).show();
+                });
     }
 }

@@ -84,28 +84,33 @@
                 tools:text="Nội dung truyện sẽ hiển thị ở đây..." />
 
             <View
+                android:id="@+id/dividerComments"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="40dp"
                 android:background="@color/divider" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnShowComments"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="20dp"
+                android:paddingVertical="12dp"
                 android:text="Xem bình luận"
-                android:textAlignment="center"
+                android:textAllCaps="false"
                 android:textColor="@color/primary"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:icon="@drawable/ic_more_vert"
+                app:iconGravity="textStart"
+                app:iconTint="@color/primary"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <!-- Floating Bottom Navigation -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomControlCard"
+        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
@@ -139,7 +144,7 @@
                 android:insetBottom="0dp"/>
 
             <View
-                android:id="@+id/divider1"
+                android:id="@+id/dividerTOC"
                 android:layout_width="1dp"
                 android:layout_height="24dp"
                 android:background="@color/divider" />

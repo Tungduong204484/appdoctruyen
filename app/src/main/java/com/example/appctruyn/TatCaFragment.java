@@ -22,9 +22,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.appctruyn.databinding.FragmentTatCaBinding;
 import com.example.appctruyn.model.Story;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TatCaFragment extends Fragment {
@@ -33,6 +31,8 @@ public class TatCaFragment extends Fragment {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable bannerRunnable;
+    private int loadCount = 0;
+    private final int TOTAL_LOADS = 4;
 
     @Nullable
     @Override
@@ -47,6 +47,9 @@ public class TatCaFragment extends Fragment {
 
         setupRecyclerViews();
         setupClickListeners();
+        
+        // Bắt đầu Shimmer
+        binding.shimmerView.startShimmer();
         fetchData();
     }
 
@@ -64,71 +67,74 @@ public class TatCaFragment extends Fragment {
         });
     }
 
+    private void checkAllLoaded() {
+        loadCount++;
+        if (loadCount >= TOTAL_LOADS && binding != null) {
+            binding.shimmerView.stopShimmer();
+            binding.shimmerView.setVisibility(View.GONE);
+            binding.mainContent.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void fetchData() {
-        // Banner
+        loadCount = 0;
+
+        // 1. Banner
         db.collection("stories")
                 .whereEqualTo("isHot", true)
                 .limit(5)
                 .get()
-                .addOnSuccessListener(documents -> {
-                    List<Story> list = documents.toObjects(Story.class);
-                    if (binding != null && !list.isEmpty()) {
-                        setupBanner(list);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Story> list = task.getResult().toObjects(Story.class);
+                        if (binding != null && !list.isEmpty()) {
+                            setupBanner(list);
+                        }
                     }
+                    checkAllLoaded();
                 });
 
-        // Đề cử
+        // 2. Đề cử
         db.collection("stories")
                 .limit(6)
                 .get()
-                .addOnSuccessListener(documents -> {
-                    List<Story> stories = documents.toObjects(Story.class);
-                    if (binding != null && !stories.isEmpty()) {
-                        binding.rvDeCu.setAdapter(new DeCuAdapter(stories, story -> navigateToStoryDetail(story.getId())));
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Story> stories = task.getResult().toObjects(Story.class);
+                        if (binding != null && !stories.isEmpty()) {
+                            binding.rvDeCu.setAdapter(new DeCuAdapter(stories, story -> navigateToStoryDetail(story.getId())));
+                        }
                     }
+                    checkAllLoaded();
                 });
 
-        // Mới đăng
+        // 3. Mới đăng
         db.collection("stories")
                 .limit(10)
                 .get()
-                .addOnSuccessListener(documents -> {
-                    List<Story> stories = documents.toObjects(Story.class);
-                    if (binding != null && !stories.isEmpty()) {
-                        binding.rvMoiDang.setAdapter(new MoiDangAdapter(stories, story -> navigateToStoryDetail(story.getId())));
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Story> stories = task.getResult().toObjects(Story.class);
+                        if (binding != null && !stories.isEmpty()) {
+                            binding.rvMoiDang.setAdapter(new MoiDangAdapter(stories, story -> navigateToStoryDetail(story.getId())));
+                        }
                     }
+                    checkAllLoaded();
                 });
 
-        // Mới hoàn thành
+        // 4. Mới hoàn thành
         db.collection("stories")
                 .whereEqualTo("status", "Full")
                 .limit(4)
                 .get()
-                .addOnSuccessListener(documents -> {
-                    if (binding == null) return;
-                    List<Story> list = documents.toObjects(Story.class);
-
-                    if (list.isEmpty()) {
-                        db.collection("stories")
-                                .whereEqualTo("status", "Hoàn thành")
-                                .limit(4)
-                                .get()
-                                .addOnSuccessListener(docs -> {
-                                    if (binding == null) return;
-                                    List<Story> listInner = docs.toObjects(Story.class);
-                                    if (!listInner.isEmpty()) {
-                                        binding.rvMoiHoanThanh.setAdapter(new MoiHoanThanhAdapter(listInner, story -> navigateToStoryDetail(story.getId())));
-                                    } else {
-                                        db.collection("stories").limit(4).get().addOnSuccessListener(docs2 -> {
-                                            if (binding == null) return;
-                                            List<Story> fallbackList = docs2.toObjects(Story.class);
-                                            binding.rvMoiHoanThanh.setAdapter(new MoiHoanThanhAdapter(fallbackList, story -> navigateToStoryDetail(story.getId())));
-                                        });
-                                    }
-                                });
-                    } else {
-                        binding.rvMoiHoanThanh.setAdapter(new MoiHoanThanhAdapter(list, story -> navigateToStoryDetail(story.getId())));
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<Story> list = task.getResult().toObjects(Story.class);
+                        if (binding != null && !list.isEmpty()) {
+                            binding.rvMoiHoanThanh.setAdapter(new MoiHoanThanhAdapter(list, story -> navigateToStoryDetail(story.getId())));
+                        }
                     }
+                    checkAllLoaded();
                 });
     }
 

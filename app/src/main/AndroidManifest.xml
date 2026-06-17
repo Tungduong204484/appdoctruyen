@@ -58,6 +58,26 @@
             android:exported="false"
             android:label="@string/manage_users" />
 
+        <activity
+            android:name=".AddStoryActivity"
+            android:exported="false"
+            android:label="Đăng truyện mới" />
+
+        <activity
+            android:name=".MyStoriesActivity"
+            android:exported="false"
+            android:label="Truyện của tôi" />
+
+        <activity
+            android:name=".AdminManageStoriesActivity"
+            android:exported="false"
+            android:label="Quản lý toàn bộ truyện" />
+
+        <activity
+            android:name=".AddChapterActivity"
+            android:exported="false"
+            android:label="Thêm chương mới" />
+
     </application>
 
 </manifest>

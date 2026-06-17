@@ -3,6 +3,7 @@ package com.example.appctruyn;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,12 +19,18 @@ import com.example.appctruyn.databinding.DialogReadingSettingsBinding;
 import com.example.appctruyn.databinding.LayoutTocBottomSheetBinding;
 import com.example.appctruyn.model.Chapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReadChapterActivity extends AppCompatActivity {
 
@@ -57,6 +64,7 @@ public class ReadChapterActivity extends AppCompatActivity {
         }
 
         fetchStoryMeta(currentStoryId);
+        incrementViewCountOnce();
 
         loadPreferences();
         applyReadingSettings();
@@ -67,6 +75,29 @@ public class ReadChapterActivity extends AppCompatActivity {
         } else {
             loadChapterByNumber(currentChapterNumber);
         }
+    }
+
+    private void incrementViewCountOnce() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null || currentStoryId == null) return;
+
+        String userId = user.getUid();
+        DocumentReference readerRef = db.collection("stories").document(currentStoryId)
+                .collection("readers").document(userId);
+
+        readerRef.get().addOnSuccessListener(doc -> {
+            if (!doc.exists()) {
+                // Người dùng này lần đầu đọc truyện này
+                Map<String, Object> data = new HashMap<>();
+                data.put("timestamp", FieldValue.serverTimestamp());
+                
+                readerRef.set(data).addOnSuccessListener(aVoid -> {
+                    // Tăng số lượt đọc trong tài liệu truyện
+                    db.collection("stories").document(currentStoryId)
+                            .update("views", FieldValue.increment(1));
+                });
+            }
+        });
     }
 
     private void fetchStoryMeta(String storyId) {
@@ -132,11 +163,11 @@ public class ReadChapterActivity extends AppCompatActivity {
 
     private void navigateToChapter(int number) {
         if (number < 1) {
-            Toast.makeText(this, "Đây là chương đầu tiên", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.first_chap_already), Toast.LENGTH_SHORT).show();
             return;
         }
         if (storyTotalChap > 0 && number > storyTotalChap) {
-            Toast.makeText(this, "Bạn đã đọc đến chương mới nhất", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.last_chap_already), Toast.LENGTH_SHORT).show();
             return;
         }
         loadChapterByNumber(number);
@@ -161,7 +192,7 @@ public class ReadChapterActivity extends AppCompatActivity {
                             }
                         } else {
                             binding.progressBar.setVisibility(View.GONE);
-                            Toast.makeText(this, "Chương này chưa cập nhật", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.no_chapters_yet), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -196,12 +227,12 @@ public class ReadChapterActivity extends AppCompatActivity {
         binding.progressBar.setVisibility(View.GONE);
         currentChapterNumber = chapter.getNumber();
 
-        String title = "Chương " + chapter.getNumber() + ": " + chapter.getTitle();
+        String title = getString(R.string.chapter_title_format, chapter.getNumber(), chapter.getTitle());
         binding.toolbar.setTitle(title);
         binding.tvChapterTitle.setText(title);
         
         String content = chapter.getContent();
-        binding.tvChapterContent.setText((content == null || content.isEmpty()) ? "Nội dung đang được cập nhật..." : content);
+        binding.tvChapterContent.setText((content == null || content.isEmpty()) ? getString(R.string.no_content) : content);
 
         binding.nestedScrollView.smoothScrollTo(0, 0);
 
@@ -300,40 +331,36 @@ public class ReadChapterActivity extends AppCompatActivity {
         binding.nestedScrollView.setBackgroundColor(bgColor);
         binding.appBar.setBackgroundColor(surfaceColor);
         binding.toolbar.setBackgroundColor(surfaceColor);
-        binding.bottomControlCard.setCardBackgroundColor(surfaceColor);
-        
-        binding.tvChapterContent.setTextColor(textColor);
         binding.toolbar.setTitleTextColor(textColor);
-        binding.tvChapterTitle.setTextColor(themeMode == 2 ? ContextCompat.getColor(this, R.color.primary) : textColor);
+        binding.tvChapterTitle.setTextColor(textColor);
+        binding.tvChapterContent.setTextColor(textColor);
+        binding.bottomNav.setBackgroundColor(surfaceColor);
         
-        // Cập nhật màu cho các nút điều hướng mới
-        binding.btnTOC.setTextColor(textColor);
+        binding.dividerTOC.setBackgroundColor(dividerColor);
+        binding.dividerComments.setBackgroundColor(dividerColor);
+        
         binding.btnPrevChapter.setTextColor(textColor);
-        binding.btnNextChapter.setTextColor(themeMode == 2 ? ContextCompat.getColor(this, R.color.primary) : textColor);
-        
-        binding.titleDivider.setBackgroundColor(dividerColor);
-        binding.divider1.setBackgroundColor(dividerColor);
-        binding.divider2.setBackgroundColor(dividerColor);
-        
-        binding.btnShowComments.setTextColor(ContextCompat.getColor(this, R.color.primary));
-        
+        binding.btnPrevChapter.setIconTint(ColorStateList.valueOf(textColor));
+        binding.btnNextChapter.setTextColor(textColor);
+        binding.btnNextChapter.setIconTint(ColorStateList.valueOf(textColor));
+        binding.btnTOC.setTextColor(textColor);
         binding.btnSettings.setColorFilter(textColor);
-        binding.toolbar.setNavigationIconTint(ContextCompat.getColor(this, R.color.primary));
-    }
-
-    private void loadPreferences() {
-        SharedPreferences prefs = getSharedPreferences("ReadingSettings", Context.MODE_PRIVATE);
-        textSize = prefs.getFloat("text_size", 18f);
-        isSerif = prefs.getBoolean("is_serif", false);
-        themeMode = prefs.getInt("theme_mode", 2);
+        binding.btnShowComments.setTextColor(textColor);
     }
 
     private void savePreferences() {
-        SharedPreferences prefs = getSharedPreferences("ReadingSettings", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("ReaderPrefs", Context.MODE_PRIVATE);
         prefs.edit()
-                .putFloat("text_size", textSize)
-                .putBoolean("is_serif", isSerif)
-                .putInt("theme_mode", themeMode)
+                .putFloat("textSize", textSize)
+                .putBoolean("isSerif", isSerif)
+                .putInt("themeMode", themeMode)
                 .apply();
+    }
+
+    private void loadPreferences() {
+        SharedPreferences prefs = getSharedPreferences("ReaderPrefs", Context.MODE_PRIVATE);
+        textSize = prefs.getFloat("textSize", 18f);
+        isSerif = prefs.getBoolean("isSerif", false);
+        themeMode = prefs.getInt("themeMode", 2);
     }
 }

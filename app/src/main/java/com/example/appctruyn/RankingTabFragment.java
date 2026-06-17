@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appctruyn.model.Story;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -48,6 +49,10 @@ public class RankingTabFragment extends Fragment {
         rvRanking = view.findViewById(R.id.rvRanking);
         rvRanking.setLayoutManager(new LinearLayoutManager(getContext()));
         
+        // Gọi hàm reset lượt đọc 1 lần để áp dụng quy tắc tính mới (mỗi tài khoản 1 lần)
+        // Sau khi app chạy và báo "Đã reset...", bạn hãy comment dòng này lại.
+        //resetAllViewsForTesting();
+        
         fetchRankingData();
         
         return view;
@@ -60,16 +65,50 @@ public class RankingTabFragment extends Fragment {
                 query = db.collection("stories").orderBy("views", Query.Direction.DESCENDING);
                 break;
             case "Đề cử":
-                query = db.collection("stories").whereEqualTo("isHot", true);
+                query = db.collection("stories")
+                        .whereEqualTo("isHot", true)
+                        .orderBy("rating", Query.Direction.DESCENDING);
                 break;
             default:
-                query = db.collection("stories").limit(20);
+                query = db.collection("stories").orderBy("rating", Query.Direction.DESCENDING);
                 break;
         }
 
-        query.limit(20).get().addOnSuccessListener(documents -> {
-            List<Story> list = documents.toObjects(Story.class);
-            rvRanking.setAdapter(new RankingAdapter(list, story -> navigateToStoryDetail(story.getId())));
+        // Dùng addSnapshotListener để tự động cập nhật thứ tự khi data thay đổi
+        query.limit(20).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            if (value != null) {
+                List<Story> list = value.toObjects(Story.class);
+                rvRanking.setAdapter(new RankingAdapter(list, story -> navigateToStoryDetail(story.getId())));
+            }
+        });
+    }
+
+    /**
+     * Hàm hỗ trợ Reset toàn bộ lượt đọc về 0 và xóa sạch sub-collection readers 
+     * để test quy tắc "Mỗi tài khoản chỉ tính 1 lần".
+     */
+    private void resetAllViewsForTesting() {
+        db.collection("stories").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot storyDoc : queryDocumentSnapshots) {
+                // Đưa views về 0
+                storyDoc.getReference().update("views", 0);
+                
+                // Xóa dữ liệu readers cũ để tính lại từ đầu
+                storyDoc.getReference().collection("readers").get().addOnSuccessListener(readers -> {
+                    for (DocumentSnapshot readerDoc : readers) {
+                        readerDoc.getReference().delete();
+                    }
+                });
+            }
+            if (isAdded()) {
+                Toast.makeText(getContext(), "Đã Reset toàn bộ lượt đọc để tính lại từ đầu!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

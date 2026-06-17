@@ -9,4 +9,59 @@
     <style name="CircleImage" parent="">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="RoundedImage" parent="">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <!-- Filter Bottom Sheet Styles -->
+    <style name="FilterTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="FilterChipGroup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="chipSpacingHorizontal">16dp</item>
+        <item name="chipSpacingVertical">8dp</item>
+    </style>
+
+    <style name="FilterChipTextOnly" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipStrokeColor">@android:color/transparent</item>
+        <item name="chipSurfaceColor">@android:color/transparent</item>
+        <item name="android:textColor">@color/filter_chip_text_color</item>
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:textSize">15sp</item>
+        <item name="chipIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipStartPadding">0dp</item>
+        <item name="chipEndPadding">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+    </style>
+
+    <style name="FilterBottomSheetDialogTheme" parent="Theme.MaterialComponents.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/FilterBottomSheetStyle</item>
+    </style>
+
+    <style name="FilterBottomSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/background_surface</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.Filter</item>
+    </style>
+
+    <style name="ShapeAppearance.App.Filter" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerSize">32dp</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
 </resources>

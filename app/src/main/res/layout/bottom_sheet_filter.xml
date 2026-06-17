@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_surface"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/divider" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <!-- Sắp xếp -->
+            <TextView style="@style/FilterTitle" android:text="Sắp xếp" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSort"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Mới lên chương" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Mới đăng" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt đọc" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt đọc tuần" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt đề cử" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt đề cử tuần" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt bình luận" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt bình luận tuần" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt đánh dấu" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt đánh giá" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Điểm đánh giá" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Số chương" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lượt mở khóa" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Tên truyện" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Loại -->
+            <TextView style="@style/FilterTitle" android:text="Loại" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgType"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Chuyển ngữ" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Sáng tác" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Giới tính -->
+            <TextView style="@style/FilterTitle" android:text="Giới tính" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgGender"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Truyện nam" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Truyện nữ" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Tình trạng -->
+            <TextView style="@style/FilterTitle" android:text="Tình trạng" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgStatus"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Còn tiếp" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Hoàn thành" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Tạm dừng" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Thuộc tính -->
+            <TextView style="@style/FilterTitle" android:text="Thuộc tính" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgAttribute"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Chọn lọc" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Chất lượng cao" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Miễn phí" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Thu phí" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Số chương -->
+            <TextView style="@style/FilterTitle" android:text="Số chương" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgChapters"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="&lt; 300" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="300-600" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="600-1000" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="&gt; 1000" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Thời gian đăng -->
+            <TextView style="@style/FilterTitle" android:text="Thời gian đăng" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgPublishDate"
+                style="@style/FilterChipGroup"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Tất cả" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Hôm nay" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="3 ngày" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="7 ngày" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="30 ngày" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Thể loại -->
+            <TextView style="@style/FilterTitle" android:text="Thể loại" />
+            <com.google.android.material.chip.ChipGroup android:id="@+id/cgGenre" style="@style/FilterChipGroup" app:singleSelection="false">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Tiên Hiệp" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Huyền Huyễn" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Khoa Huyễn" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Võng Du" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Đô Thị" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Kiếm Hiệp" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Kỳ Ảo" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Light Novel" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.chip.ChipGroup android:id="@+id/cgGenreOther" style="@style/FilterChipGroup" app:singleSelection="false">
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Dã Sử" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Huyền Nghi" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Lịch Sử" />
+                <com.google.android.material.chip.Chip style="@style/FilterChipTextOnly" android:text="Mạt Thế" />
+            </com.google.android.material.chip.ChipGroup>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="@color/background_surface"
+        android:elevation="8dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnApply"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:text="Gửi"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/black"
+            app:cornerRadius="27dp" />
+    </LinearLayout>
+
+</LinearLayout>

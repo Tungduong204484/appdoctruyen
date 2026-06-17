@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.appctruyn.databinding.ItemChapterBinding;
 import com.example.appctruyn.model.Chapter;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
 
@@ -50,11 +53,18 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
             holder.itemView.getContext().getString(R.string.chapter_title_format, chapter.getNumber(), title)
         );
         
-        // Display timestamp if available
-        String timestamp = chapter.getTimestamp();
-        if (timestamp != null && !timestamp.isEmpty()) {
+        // Display formatted timestamp if available
+        String timestampStr = chapter.getTimestamp();
+        if (timestampStr != null && !timestampStr.isEmpty()) {
             holder.binding.tvTimestamp.setVisibility(View.VISIBLE);
-            holder.binding.tvTimestamp.setText(timestamp);
+            try {
+                long timestampLong = Long.parseLong(timestampStr);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                holder.binding.tvTimestamp.setText(sdf.format(new Date(timestampLong)));
+            } catch (NumberFormatException e) {
+                // If parsing fails, display the original string (fallback)
+                holder.binding.tvTimestamp.setText(timestampStr);
+            }
         } else {
             holder.binding.tvTimestamp.setVisibility(View.GONE);
         }

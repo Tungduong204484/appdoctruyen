@@ -61,6 +61,12 @@ public class AccountFragment extends Fragment {
         final TextView tvRoleBadge = view.findViewById(R.id.tvRoleBadge);
         final LinearLayout layoutAuthorMenu = view.findViewById(R.id.layoutAuthorMenu);
         final LinearLayout layoutAdminMenu = view.findViewById(R.id.layoutAdminMenu);
+        
+        final View btnMyStories = view.findViewById(R.id.btnMyStories);
+        final View btnAddStory = view.findViewById(R.id.btnAddStory);
+        final View btnAdminManageStories = view.findViewById(R.id.btnAdminManageStories);
+        final View btnManageUsers = view.findViewById(R.id.btnManageUsers);
+        
         Button btnLogout = view.findViewById(R.id.btnLogout);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         View btnEditAvatar = view.findViewById(R.id.btnEditAvatar);
@@ -104,6 +110,14 @@ public class AccountFragment extends Fragment {
                 }
             }
         });
+
+        // Click listeners cho menu tác giả
+        btnMyStories.setOnClickListener(v -> startActivity(new Intent(getContext(), MyStoriesActivity.class)));
+        btnAddStory.setOnClickListener(v -> startActivity(new Intent(getContext(), AddStoryActivity.class)));
+        
+        // Click listeners cho menu Admin
+        btnAdminManageStories.setOnClickListener(v -> startActivity(new Intent(getContext(), AdminManageStoriesActivity.class)));
+        btnManageUsers.setOnClickListener(v -> startActivity(new Intent(getContext(), AdminManageUsersActivity.class)));
 
         btnLogout.setOnClickListener(v -> {
             Context context = getContext();

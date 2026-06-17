@@ -5,15 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.appctruyn.auth.AuthManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView btnFilter;
     private LinearLayout dropdownFilter;
     private AppBarLayout appBarLayout;
+    private TextView tvCurrentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +38,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        // Ánh xạ View
         bottomNav = findViewById(R.id.bottomNav);
         btnSearch = findViewById(R.id.btnSearch);
         btnFilter = findViewById(R.id.btnFilter);
         dropdownFilter = findViewById(R.id.dropdownFilter);
         appBarLayout = findViewById(R.id.appBarLayout);
+        tvCurrentFilter = findViewById(R.id.tvCurrentFilter);
 
         if (savedInstanceState == null) {
             loadFragment(new TatCaFragment());
@@ -51,11 +56,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment) {
-        // Ẩn AppBar với Account và Library
         if (fragment instanceof AccountFragment || fragment instanceof LibraryFragment) {
             appBarLayout.setVisibility(View.GONE);
         } else {
             appBarLayout.setVisibility(View.VISIBLE);
+            // Cập nhật tiêu đề dựa trên fragment (tùy chọn)
+            if (fragment instanceof TatCaFragment) {
+                tvCurrentFilter.setText("Khám phá");
+            } else if (fragment instanceof RankingFragment) {
+                tvCurrentFilter.setText("Xếp hạng");
+            }
         }
 
         getSupportFragmentManager().beginTransaction()
@@ -69,12 +79,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btnFilter.setOnClickListener(v -> 
-            Toast.makeText(this, getString(R.string.filter_genre), Toast.LENGTH_SHORT).show()
-        );
+        // Đảm bảo icon bộ lọc (phễu) hoạt động
+        if (btnFilter != null) {
+            btnFilter.setOnClickListener(v -> {
+                FilterBottomSheet filterBottomSheet = new FilterBottomSheet();
+                filterBottomSheet.setOnFilterApplyListener(filters -> {
+                    // Xử lý dữ liệu lọc ở đây
+                    String sort = filters.getString("sort", "");
+                    Toast.makeText(this, "Đang lọc: " + sort, Toast.LENGTH_SHORT).show();
+                });
+                filterBottomSheet.show(getSupportFragmentManager(), "FilterBottomSheet");
+            });
+        }
 
         dropdownFilter.setOnClickListener(v -> 
-            Toast.makeText(this, getString(R.string.filter_gender), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Tính năng thay đổi bộ lọc nhanh", Toast.LENGTH_SHORT).show()
         );
     }
 
@@ -103,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putString("TARGET_TAB", targetTab);
         rankingFragment.setArguments(args);
-        
         loadFragment(rankingFragment);
         bottomNav.setSelectedItemId(R.id.nav_ranking);
     }

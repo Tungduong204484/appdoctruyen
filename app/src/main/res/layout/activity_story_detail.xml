@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="top">
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="120dp"
@@ -57,17 +57,17 @@
                             android:background="@color/divider" />
                     </com.google.android.material.card.MaterialCardView>
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="16dp"
-                        android:orientation="vertical">
+                        android:layout_marginStart="16dp">
 
                         <TextView
                             android:id="@+id/tvGenre"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
                             android:background="@drawable/bg_status"
                             android:backgroundTint="@color/accent_blue"
                             android:paddingHorizontal="10dp"
@@ -77,91 +77,113 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/no_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:maxLines="3"
-                            android:ellipsize="end"/>
-
-                        <TextView
-                            android:id="@+id/tvAuthor"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/no_author"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp" />
-
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/layoutInfo"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-                            <RatingBar
-                                android:id="@+id/ratingBar"
-                                style="?android:attr/ratingBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:numStars="5"
-                                android:progressTint="@color/rating_star"
-                                android:secondaryProgressTint="@color/rating_star"
-                                android:rating="4.9" />
+                            android:layout_below="@id/tvGenre"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:id="@+id/tvRating"
+                                android:id="@+id/tvStoryStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:text="4.9"
-                                android:textColor="@color/rating_star"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/bg_status"
+                                android:backgroundTint="#27AE60"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:text="Đang ra"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/no_title"
+                                android:textColor="@color/text_primary"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
-                                android:textSize="14sp"/>
+                                android:maxLines="3"
+                                android:ellipsize="end"/>
+
+                            <TextView
+                                android:id="@+id/tvAuthor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="@string/no_author"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <RatingBar
+                                    android:id="@+id/ratingBar"
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="5"
+                                    android:progressTint="@color/rating_star"
+                                    android:secondaryProgressTint="@color/rating_star"
+                                    android:rating="4.9" />
+                                <TextView
+                                    android:id="@+id/tvRating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="4.9"
+                                    android:textColor="@color/rating_star"
+                                    android:textStyle="bold"
+                                    android:textSize="14sp"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btnRead"
+                                    android:layout_width="0dp"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1.3"
+                                    android:text="@string/btn_read_now"
+                                    android:textAllCaps="false"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    app:cornerRadius="10dp"
+                                    app:backgroundTint="@color/primary"
+                                    android:textColor="@color/on_primary"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp"/>
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btnAddLibrary"
+                                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginStart="10dp"
+                                    android:padding="0dp"
+                                    app:icon="@drawable/ic_nav_library"
+                                    app:iconGravity="textStart"
+                                    app:iconPadding="0dp"
+                                    app:cornerRadius="10dp"
+                                    app:strokeColor="@color/divider"
+                                    app:iconTint="@color/text_primary"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp"/>
+                            </LinearLayout>
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnRead"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1.3"
-                                android:text="@string/btn_read_now"
-                                android:textAllCaps="false"
-                                android:textSize="13sp"
-                                android:textStyle="bold"
-                                app:cornerRadius="10dp"
-                                app:backgroundTint="@color/primary"
-                                android:textColor="@color/on_primary"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"/>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnAddLibrary"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_marginStart="10dp"
-                                android:padding="0dp"
-                                app:icon="@drawable/ic_nav_library"
-                                app:iconGravity="textStart"
-                                app:iconPadding="0dp"
-                                app:cornerRadius="10dp"
-                                app:strokeColor="@color/divider"
-                                app:iconTint="@color/text_primary"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
+                    </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -284,22 +306,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:padding="16dp">
-                <TextView
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnWriteReview"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    android:text="Viết đánh giá"
+                    app:icon="@drawable/ic_settings" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvReviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Đánh giá từ độc giả"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:nestedScrollingEnabled="false" />
+
                 <TextView
+                    android:id="@+id/tvNoReviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:text="Chưa có đánh giá nào."
                     android:gravity="center"
-                    android:text="Tính năng đánh giá đang được cập nhật."
-                    android:textColor="@color/text_secondary" />
+                    android:padding="40dp"
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone"/>
             </LinearLayout>
 
             <!-- Tab Bình luận -->
@@ -327,7 +360,8 @@
                         android:padding="12dp"
                         android:background="@drawable/bg_role_card"
                         android:textColor="@color/text_primary"
-                        android:inputType="textLongMessage"/>
+                        android:inputType="textLongMessage"
+                        android:importantForAutofill="no" />
 
                     <ImageButton
                         android:id="@+id/btnSendComment"
@@ -336,7 +370,8 @@
                         android:layout_marginStart="8dp"
                         android:src="@drawable/ic_chevron_right"
                         app:tint="@color/primary"
-                        android:background="?attr/selectableItemBackgroundBorderless"/>
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Gửi bình luận" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

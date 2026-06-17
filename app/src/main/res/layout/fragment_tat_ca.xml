@@ -6,9 +6,29 @@
     android:background="@color/background_main"
     android:orientation="vertical">
 
-    <androidx.core.widget.NestedScrollView
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:shimmer_auto_start="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include layout="@layout/shimmer_item_story" />
+            <include layout="@layout/shimmer_item_story" />
+            <include layout="@layout/shimmer_item_story" />
+            <include layout="@layout/shimmer_item_story" />
+            <include layout="@layout/shimmer_item_story" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -16,7 +36,7 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
-            <!-- BANNER SLIDE - Nâng cấp bo góc và shadow -->
+            <!-- BANNER SLIDE -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="210dp"
@@ -41,7 +61,7 @@
                 android:layout_marginTop="-8dp"
                 android:layout_marginBottom="16dp" />
 
-            <!-- PHẦN 1: ĐỀ CỬ - Modern Header -->
+            <!-- PHẦN 1: ĐỀ CỬ -->
             <LinearLayout
                 android:id="@+id/layoutHeaderDeCu"
                 android:layout_width="match_parent"
@@ -77,7 +97,7 @@
                 android:nestedScrollingEnabled="false"
                 android:clipToPadding="false" />
 
-            <!-- PHẦN 2: MỚI ĐĂNG - Với nền bo góc Gradient -->
+            <!-- PHẦN 2: MỚI ĐĂNG -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

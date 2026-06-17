@@ -3,30 +3,37 @@ package com.example.appctruyn;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.appctruyn.databinding.ActivityStoryDetailBinding;
+import com.example.appctruyn.databinding.DialogWriteReviewBinding;
 import com.example.appctruyn.model.Chapter;
 import com.example.appctruyn.model.Comment;
 import com.example.appctruyn.model.LibraryStory;
+import com.example.appctruyn.model.Review;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class StoryDetailActivity extends AppCompatActivity {
 
@@ -43,6 +50,9 @@ public class StoryDetailActivity extends AppCompatActivity {
 
     private CommentAdapter commentAdapter;
     private final List<Comment> commentList = new ArrayList<>();
+    
+    private ReviewAdapter reviewAdapter;
+    private final List<Review> reviewList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +70,11 @@ public class StoryDetailActivity extends AppCompatActivity {
         setupUI();
         setupTabs();
         setupComments();
+        setupReviews();
         fetchStoryDetail(storyId);
         fetchChapters(storyId);
         loadStoryComments();
+        loadStoryReviews();
     }
 
     @Override
@@ -111,6 +123,7 @@ public class StoryDetailActivity extends AppCompatActivity {
         });
 
         binding.btnSendComment.setOnClickListener(v -> postStoryComment());
+        binding.btnWriteReview.setOnClickListener(v -> showWriteReviewDialog());
     }
 
     private void setupTabs() {
@@ -128,8 +141,8 @@ public class StoryDetailActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                // Ẩn/Hiện layout tương ứng với tab
                 binding.layoutIntro.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+                binding.layoutReviews.setVisibility(position == 1 ? View.VISIBLE : View.GONE);
                 binding.layoutComments.setVisibility(position == 2 ? View.VISIBLE : View.GONE);
                 binding.layoutChapters.setVisibility(position == 3 ? View.VISIBLE : View.GONE);
             }
@@ -146,16 +159,17 @@ public class StoryDetailActivity extends AppCompatActivity {
         binding.rvStoryComments.setAdapter(commentAdapter);
     }
 
+    private void setupReviews() {
+        reviewAdapter = new ReviewAdapter(reviewList);
+        binding.rvReviews.setLayoutManager(new LinearLayoutManager(this));
+        reviewAdapter.notifyDataSetChanged();
+    }
+
     private void loadStoryComments() {
-        // Loại bỏ orderBy để tránh lỗi Index, sẽ sắp xếp thủ công bên dưới
         db.collection("comments")
                 .whereEqualTo("storyId", storyId)
                 .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e("StoryDetail", "Error loading comments", error);
-                        Toast.makeText(this, "Lỗi tải bình luận: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    if (error != null) return;
                     if (value != null) {
                         commentList.clear();
                         for (QueryDocumentSnapshot doc : value) {
@@ -163,17 +177,103 @@ public class StoryDetailActivity extends AppCompatActivity {
                             comment.setId(doc.getId());
                             commentList.add(comment);
                         }
-                        
-                        // Sắp xếp bình luận mới nhất lên đầu
                         Collections.sort(commentList, (c1, c2) -> {
                             if (c1.getTimestamp() == null || c2.getTimestamp() == null) return 0;
                             return c2.getTimestamp().compareTo(c1.getTimestamp());
                         });
-
                         commentAdapter.notifyDataSetChanged();
                         binding.tvNoComments.setVisibility(commentList.isEmpty() ? View.VISIBLE : View.GONE);
                     }
                 });
+    }
+
+    private void loadStoryReviews() {
+        db.collection("reviews")
+                .whereEqualTo("storyId", storyId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) return;
+                    if (value != null) {
+                        reviewList.clear();
+                        float totalRating = 0;
+                        for (QueryDocumentSnapshot doc : value) {
+                            Review review = doc.toObject(Review.class);
+                            review.setId(doc.getId());
+                            reviewList.add(review);
+                            totalRating += review.getRating();
+                        }
+                        
+                        Collections.sort(reviewList, (r1, r2) -> {
+                            if (r1.getTimestamp() == null || r2.getTimestamp() == null) return 0;
+                            return r2.getTimestamp().compareTo(r1.getTimestamp());
+                        });
+                        
+                        if (reviewAdapter != null) reviewAdapter.notifyDataSetChanged();
+                        binding.tvNoReviews.setVisibility(reviewList.isEmpty() ? View.VISIBLE : View.GONE);
+                        
+                        if (!reviewList.isEmpty()) {
+                            float avg = totalRating / reviewList.size();
+                            binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", avg));
+                            binding.ratingBar.setRating(avg);
+                        }
+                    }
+                });
+    }
+
+    private void showWriteReviewDialog() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, getString(R.string.login_to_rate), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DialogWriteReviewBinding dialogBinding = DialogWriteReviewBinding.inflate(getLayoutInflater());
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogBinding.getRoot())
+                .create();
+
+        dialogBinding.btnSubmitReview.setOnClickListener(v -> {
+            float ratingValue = dialogBinding.ratingBar.getRating();
+            String content = dialogBinding.etReviewContent.getText().toString().trim();
+            
+            if (ratingValue == 0) {
+                Toast.makeText(this, getString(R.string.rating_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String userName = user.getDisplayName();
+            if (userName == null || userName.isEmpty()) userName = user.getEmail();
+
+            Review review = new Review(user.getUid(), userName, content, ratingValue, storyId);
+            
+            db.collection("reviews").add(review)
+                    .addOnSuccessListener(doc -> {
+                        Toast.makeText(this, getString(R.string.review_thanks), Toast.LENGTH_SHORT).show();
+                        updateStoryRatingOnServer(ratingValue);
+                        dialog.dismiss();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, getString(R.string.err_unknown) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        });
+
+        dialog.show();
+    }
+
+    private void updateStoryRatingOnServer(float newRatingValue) {
+        db.collection("stories").document(storyId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Double currentRating = documentSnapshot.getDouble("rating");
+                
+                if (currentRating == null) currentRating = 0.0;
+                
+                float totalReviews = reviewList.size();
+                float sum = 0;
+                for(Review r : reviewList) sum += r.getRating();
+                float newAvg = totalReviews > 0 ? sum / totalReviews : 0;
+
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("rating", newAvg);
+                db.collection("stories").document(storyId).update(updates);
+            }
+        });
     }
 
     private void postStoryComment() {
@@ -196,18 +296,15 @@ public class StoryDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     binding.etCommentInput.setText("");
                     binding.btnSendComment.setEnabled(true);
-                    Toast.makeText(this, "Đã đăng bình luận", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     binding.btnSendComment.setEnabled(true);
-                    Log.e("StoryDetail", "Error posting comment", e);
-                    Toast.makeText(this, "Lỗi gửi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.comment_error) + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void fetchStoryDetail(String storyId) {
-        db.collection("stories").document(storyId)
-            .get()
+        db.collection("stories").document(storyId).get()
             .addOnSuccessListener(doc -> {
                 if (!doc.exists()) return;
                 storyTitle = doc.getString("title");
@@ -215,6 +312,22 @@ public class StoryDetailActivity extends AppCompatActivity {
                 binding.tvAuthor.setText(doc.getString("author"));
                 binding.tvGenre.setText(doc.getString("genre"));
                 binding.tvDescription.setText(doc.getString("description"));
+
+                String status = doc.getString("status");
+                if (status != null && !status.isEmpty()) {
+                    binding.tvStoryStatus.setVisibility(View.VISIBLE);
+                    binding.tvStoryStatus.setText(status);
+                    
+                    if (status.equals("Hoàn thành")) {
+                        binding.tvStoryStatus.getBackground().setTint(Color.parseColor("#27AE60")); // Xanh lá
+                    } else if (status.equals("Tạm dừng")) {
+                        binding.tvStoryStatus.getBackground().setTint(Color.parseColor("#E74C3C")); // Đỏ
+                    } else {
+                        binding.tvStoryStatus.getBackground().setTint(Color.parseColor("#2980B9")); // Xanh dương
+                    }
+                } else {
+                    binding.tvStoryStatus.setVisibility(View.GONE);
+                }
 
                 Double rating = doc.getDouble("rating");
                 binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", rating != null ? rating : 0.0));
@@ -241,9 +354,13 @@ public class StoryDetailActivity extends AppCompatActivity {
                         chapters.add(chapter);
                     }
                 }
+                
+                totalChaptersCount = chapters.size();
+                binding.tvChapterCountStats.setText(String.valueOf(totalChaptersCount));
+                binding.tvChapterTitleHeader.setText(getString(R.string.chapter_count_format, totalChaptersCount));
+                
                 if (!chapters.isEmpty()) {
                     firstChapterId = chapters.get(0).getId();
-                    binding.tvChapterTitleHeader.setText(getString(R.string.chapter_count_format, chapters.size()));
                 }
                 setupChapterList(chapters);
             });
