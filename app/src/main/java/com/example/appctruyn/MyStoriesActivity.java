@@ -2,7 +2,6 @@ package com.example.appctruyn;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +17,6 @@ public class MyStoriesActivity extends AppCompatActivity {
 
     private ActivityMyStoriesBinding binding;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private ManageStoryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,7 @@ public class MyStoriesActivity extends AppCompatActivity {
                     }
                     if (value != null) {
                         List<Story> stories = value.toObjects(Story.class);
-                        adapter = new ManageStoryAdapter(stories, false, new ManageStoryAdapter.OnStoryActionListener() {
+                        ManageStoryAdapter adapter = new ManageStoryAdapter(stories, false, new ManageStoryAdapter.OnStoryActionListener() {
                             @Override
                             public void onEdit(Story story) {
                                 Intent intent = new Intent(MyStoriesActivity.this, AddStoryActivity.class);
@@ -72,7 +70,8 @@ public class MyStoriesActivity extends AppCompatActivity {
 
                             @Override
                             public void onAddChapter(Story story) {
-                                Intent intent = new Intent(MyStoriesActivity.this, AddChapterActivity.class);
+                                // Mở màn hình quản lý chương để có thể Thêm mới hoặc Sửa chương cũ
+                                Intent intent = new Intent(MyStoriesActivity.this, ManageChaptersActivity.class);
                                 intent.putExtra("storyId", story.getId());
                                 startActivity(intent);
                             }

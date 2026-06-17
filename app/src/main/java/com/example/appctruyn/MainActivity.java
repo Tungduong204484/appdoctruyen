@@ -79,14 +79,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Đảm bảo icon bộ lọc (phễu) hoạt động
         if (btnFilter != null) {
             btnFilter.setOnClickListener(v -> {
                 FilterBottomSheet filterBottomSheet = new FilterBottomSheet();
                 filterBottomSheet.setOnFilterApplyListener(filters -> {
-                    // Xử lý dữ liệu lọc ở đây
-                    String sort = filters.getString("sort", "");
-                    Toast.makeText(this, "Đang lọc: " + sort, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    intent.putExtras(filters);
+                    startActivity(intent);
                 });
                 filterBottomSheet.show(getSupportFragmentManager(), "FilterBottomSheet");
             });

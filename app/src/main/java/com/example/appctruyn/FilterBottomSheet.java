@@ -62,22 +62,15 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ChipGroup cgSort = view.findViewById(R.id.cgSort);
-        ChipGroup cgType = view.findViewById(R.id.cgType);
-        ChipGroup cgGender = view.findViewById(R.id.cgGender);
         ChipGroup cgStatus = view.findViewById(R.id.cgStatus);
-        ChipGroup cgAttribute = view.findViewById(R.id.cgAttribute);
         ChipGroup cgChapters = view.findViewById(R.id.cgChapters);
         ChipGroup cgPublishDate = view.findViewById(R.id.cgPublishDate);
         ChipGroup cgGenre = view.findViewById(R.id.cgGenre);
-        ChipGroup cgGenreOther = view.findViewById(R.id.cgGenreOther);
         View btnApply = view.findViewById(R.id.btnApply);
 
         // Set default selections
         setDefault(cgSort);
-        setDefault(cgType);
-        setDefault(cgGender);
         setDefault(cgStatus);
-        setDefault(cgAttribute);
         setDefault(cgChapters);
         setDefault(cgPublishDate);
 
@@ -85,15 +78,11 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
             if (listener != null) {
                 Bundle filters = new Bundle();
                 filters.putString("sort", getSelectedText(cgSort));
-                filters.putString("type", getSelectedText(cgType));
-                filters.putString("gender", getSelectedText(cgGender));
                 filters.putString("status", getSelectedText(cgStatus));
-                filters.putString("attribute", getSelectedText(cgAttribute));
                 filters.putString("chapters", getSelectedText(cgChapters));
                 filters.putString("publishDate", getSelectedText(cgPublishDate));
                 
                 ArrayList<String> genres = getSelectedList(cgGenre);
-                genres.addAll(getSelectedList(cgGenreOther));
                 filters.putStringArrayList("genres", genres);
                 
                 listener.onFilterApply(filters);

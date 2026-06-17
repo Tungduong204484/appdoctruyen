@@ -3,6 +3,8 @@ package com.example.appctruyn.auth;
 import com.example.appctruyn.model.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -10,6 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class AuthManager {
 
@@ -83,6 +87,41 @@ public class AuthManager {
                 });
     }
 
+    public static Task<Void> updateDisplayName(String displayName) {
+        FirebaseUser firebaseUser = getCurrentUser();
+        if (firebaseUser == null) return Tasks.forException(new Exception("Chưa đăng nhập"));
+
+        return db.collection("users").document(firebaseUser.getUid())
+                .update("displayName", displayName);
+    }
+
+    public static Task<Void> updateEmail(String newEmail) {
+        FirebaseUser firebaseUser = getCurrentUser();
+        if (firebaseUser == null) return Tasks.forException(new Exception("Chưa đăng nhập"));
+
+        return firebaseUser.updateEmail(newEmail)
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) throw task.getException();
+                    return db.collection("users").document(firebaseUser.getUid())
+                            .update("email", newEmail);
+                });
+    }
+
+    public static Task<Void> updatePassword(String newPassword) {
+        FirebaseUser firebaseUser = getCurrentUser();
+        if (firebaseUser == null) return Tasks.forException(new Exception("Chưa đăng nhập"));
+
+        return firebaseUser.updatePassword(newPassword);
+    }
+
+    public static Task<Void> reauthenticate(String password) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return Tasks.forException(new Exception("Chưa đăng nhập"));
+        
+        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), password);
+        return user.reauthenticate(credential);
+    }
+
     // Admin: Lấy danh sách người dùng
     public static Task<List<User>> getAllUsers() {
         return db.collection("users").orderBy("createdAt").get()
@@ -95,6 +134,19 @@ public class AuthManager {
     // Admin: Cập nhật role
     public static Task<Void> updateUserRole(String uid, String newRole) {
         return db.collection("users").document(uid).update("role", newRole);
+    }
+
+    // Admin: Cập nhật thông tin người dùng
+    public static Task<Void> adminUpdateUser(String uid, String displayName, String email) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("displayName", displayName);
+        updates.put("email", email);
+        return db.collection("users").document(uid).update(updates);
+    }
+
+    // Admin: Xóa người dùng (chỉ xóa trong Firestore, xóa Auth cần Admin SDK hoặc Cloud Functions)
+    public static Task<Void> adminDeleteUser(String uid) {
+        return db.collection("users").document(uid).delete();
     }
 
     public static void logout() {

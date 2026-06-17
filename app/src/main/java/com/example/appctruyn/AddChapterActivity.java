@@ -14,6 +14,8 @@ public class AddChapterActivity extends AppCompatActivity {
     private ActivityAddChapterBinding binding;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String storyId;
+    private String chapterId;
+    private boolean isEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +24,38 @@ public class AddChapterActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         storyId = getIntent().getStringExtra("storyId");
+        chapterId = getIntent().getStringExtra("chapterId");
+        
         if (storyId == null) {
             Toast.makeText(this, "Lỗi: Không tìm thấy ID truyện", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
+        if (chapterId != null) {
+            isEditMode = true;
+            binding.toolbar.setTitle("Sửa chương");
+            binding.btnSave.setText("Cập nhật");
+            loadChapterData();
+        }
+
         binding.toolbar.setNavigationOnClickListener(v -> finish());
         binding.btnSave.setOnClickListener(v -> saveChapter());
+    }
+
+    private void loadChapterData() {
+        db.collection("stories").document(storyId)
+                .collection("chapters").document(chapterId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Chapter chapter = documentSnapshot.toObject(Chapter.class);
+                    if (chapter != null) {
+                        binding.etChapterNumber.setText(String.valueOf(chapter.getNumber()));
+                        binding.etChapterTitle.setText(chapter.getTitle());
+                        binding.etContent.setText(chapter.getContent());
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi tải dữ liệu chương", Toast.LENGTH_SHORT).show());
     }
 
     private void saveChapter() {
@@ -52,6 +78,14 @@ public class AddChapterActivity extends AppCompatActivity {
 
         binding.btnSave.setEnabled(false);
 
+        if (isEditMode) {
+            updateChapter(chapterNum, title, content);
+        } else {
+            addNewChapter(chapterNum, title, content);
+        }
+    }
+
+    private void addNewChapter(int chapterNum, String title, String content) {
         Chapter chapter = new Chapter();
         chapter.setStoryId(storyId);
         chapter.setChapterNumber(chapterNum);
@@ -64,11 +98,30 @@ public class AddChapterActivity extends AppCompatActivity {
                 .collection("chapters")
                 .add(chapter)
                 .addOnSuccessListener(documentReference -> {
-                    // Tự động tăng số lượng chương ở document Truyện gốc
                     db.collection("stories").document(storyId)
                             .update("totalChapters", FieldValue.increment(1));
 
                     Toast.makeText(this, "Đăng chương thành công!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    binding.btnSave.setEnabled(true);
+                    Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void updateChapter(int chapterNum, String title, String content) {
+        db.collection("stories").document(storyId)
+                .collection("chapters").document(chapterId)
+                .update(
+                        "number", chapterNum,
+                        "chapterNumber", chapterNum,
+                        "title", title.isEmpty() ? "Chương " + chapterNum : title,
+                        "content", content,
+                        "timestamp", String.valueOf(new Date().getTime())
+                )
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Cập nhật chương thành công!", Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {

@@ -35,6 +35,8 @@ import java.util.concurrent.Executors;
 public class AccountFragment extends Fragment {
 
     private ImageView ivAvatar;
+    private TextView tvName, tvEmail, tvRoleBadge;
+    private LinearLayout layoutAuthorMenu, layoutAdminMenu;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private final ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
@@ -56,23 +58,57 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final TextView tvName = view.findViewById(R.id.tvUserName);
-        final TextView tvEmail = view.findViewById(R.id.tvUserEmail);
-        final TextView tvRoleBadge = view.findViewById(R.id.tvRoleBadge);
-        final LinearLayout layoutAuthorMenu = view.findViewById(R.id.layoutAuthorMenu);
-        final LinearLayout layoutAdminMenu = view.findViewById(R.id.layoutAdminMenu);
+        tvName = view.findViewById(R.id.tvUserName);
+        tvEmail = view.findViewById(R.id.tvUserEmail);
+        tvRoleBadge = view.findViewById(R.id.tvRoleBadge);
+        layoutAuthorMenu = view.findViewById(R.id.layoutAuthorMenu);
+        layoutAdminMenu = view.findViewById(R.id.layoutAdminMenu);
         
         final View btnMyStories = view.findViewById(R.id.btnMyStories);
         final View btnAddStory = view.findViewById(R.id.btnAddStory);
         final View btnAdminManageStories = view.findViewById(R.id.btnAdminManageStories);
         final View btnManageUsers = view.findViewById(R.id.btnManageUsers);
+        final View btnEditProfile = view.findViewById(R.id.btnEditProfile_inc);
         
         Button btnLogout = view.findViewById(R.id.btnLogout);
         ivAvatar = view.findViewById(R.id.ivAvatar);
         View btnEditAvatar = view.findViewById(R.id.btnEditAvatar);
 
         btnEditAvatar.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
+        btnEditProfile.setOnClickListener(v -> startActivity(new Intent(getContext(), EditProfileActivity.class)));
 
+        // Click listeners cho menu tác giả
+        btnMyStories.setOnClickListener(v -> startActivity(new Intent(getContext(), MyStoriesActivity.class)));
+        btnAddStory.setOnClickListener(v -> startActivity(new Intent(getContext(), AddStoryActivity.class)));
+        
+        // Click listeners cho menu Admin
+        btnAdminManageStories.setOnClickListener(v -> startActivity(new Intent(getContext(), AdminManageStoriesActivity.class)));
+        btnManageUsers.setOnClickListener(v -> startActivity(new Intent(getContext(), AdminManageUsersActivity.class)));
+
+        btnLogout.setOnClickListener(v -> {
+            Context context = getContext();
+            if (context == null) return;
+            new AlertDialog.Builder(context)
+                    .setTitle(context.getString(R.string.logout))
+                    .setMessage(context.getString(R.string.logout_confirm))
+                    .setPositiveButton(context.getString(R.string.logout), (dialog, which) -> {
+                        AuthManager.logout();
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        startActivity(intent);
+                        if (getActivity() != null) getActivity().finishAffinity();
+                    })
+                    .setNegativeButton(context.getString(R.string.cancel), null)
+                    .show();
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUserInfo();
+    }
+
+    private void loadUserInfo() {
         AuthManager.getCurrentUserInfo().addOnCompleteListener(task -> {
             if (!isAdded()) return;
             Context context = getContext();
@@ -109,30 +145,6 @@ public class AccountFragment extends Fragment {
                     }
                 }
             }
-        });
-
-        // Click listeners cho menu tác giả
-        btnMyStories.setOnClickListener(v -> startActivity(new Intent(getContext(), MyStoriesActivity.class)));
-        btnAddStory.setOnClickListener(v -> startActivity(new Intent(getContext(), AddStoryActivity.class)));
-        
-        // Click listeners cho menu Admin
-        btnAdminManageStories.setOnClickListener(v -> startActivity(new Intent(getContext(), AdminManageStoriesActivity.class)));
-        btnManageUsers.setOnClickListener(v -> startActivity(new Intent(getContext(), AdminManageUsersActivity.class)));
-
-        btnLogout.setOnClickListener(v -> {
-            Context context = getContext();
-            if (context == null) return;
-            new AlertDialog.Builder(context)
-                    .setTitle(context.getString(R.string.logout))
-                    .setMessage(context.getString(R.string.logout_confirm))
-                    .setPositiveButton(context.getString(R.string.logout), (dialog, which) -> {
-                        AuthManager.logout();
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        startActivity(intent);
-                        if (getActivity() != null) getActivity().finishAffinity();
-                    })
-                    .setNegativeButton(context.getString(R.string.cancel), null)
-                    .show();
         });
     }
 
@@ -215,6 +227,11 @@ public class AccountFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ivAvatar = null;
+        tvName = null;
+        tvEmail = null;
+        tvRoleBadge = null;
+        layoutAuthorMenu = null;
+        layoutAdminMenu = null;
     }
 
     @Override

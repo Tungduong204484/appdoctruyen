@@ -65,7 +65,7 @@ public class AdminManageStoriesActivity extends AppCompatActivity {
 
                             @Override
                             public void onAddChapter(Story story) {
-                                Intent intent = new Intent(AdminManageStoriesActivity.this, AddChapterActivity.class);
+                                Intent intent = new Intent(AdminManageStoriesActivity.this, ManageChaptersActivity.class);
                                 intent.putExtra("storyId", story.getId());
                                 startActivity(intent);
                             }

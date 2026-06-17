@@ -1,30 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:endX="85.84757"
-                android:endY="92.4963"
-                android:startX="42.9492"
-                android:startY="49.59793"
-                android:type="linear">
-                <item
-                    android:color="#44000000"
-                    android:offset="0.0" />
-                <item
-                    android:color="#00000000"
-                    android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <!-- Decorative Circles (Light overlays) -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
-        android:strokeWidth="1"
-        android:strokeColor="#00000000" />
+        android:fillAlpha="0.06"
+        android:pathData="M512,520m-340,0a340,340 0,1 1,680 0a340,340 0,1 1,-680 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.05"
+        android:pathData="M512,520m-260,0a260,260 0,1 1,520 0a260,260 0,1 1,-520 0" />
+
+    <!-- Shadow under the book -->
+    <path
+        android:fillColor="#5A2A12"
+        android:fillAlpha="0.18"
+        android:pathData="M512,730m-300,0a300,26 0,1 1,600 0a300,26 0,1 1,-600 0" />
+
+    <!-- Bookmark behind the book -->
+    <path
+        android:fillColor="#1E8E72"
+        android:pathData="M470,130 Q470,110 492,110 L532,110 Q554,110 554,130 L554,460 L512,405 L470,460 Z" />
+    <path
+        android:fillColor="#156F59"
+        android:fillAlpha="0.55"
+        android:pathData="M470,130 Q470,110 492,110 L500,110 L500,460 L470,460 Z" />
+
+    <!-- Book Pages (Main Body) -->
+    <path
+        android:fillColor="#FFF8EE"
+        android:pathData="M512,345 C420,352 300,360 255,390 L233,645 C225,675 233,698 263,706 L512,706 Z" />
+    <path
+        android:fillColor="#FFF8EE"
+        android:pathData="M512,345 C604,352 724,360 769,390 L791,645 C799,675 791,698 761,706 L512,706 Z" />
+
+    <!-- Book Spine/Center Fold -->
+    <path
+        android:strokeColor="#E8D7BE"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:pathData="M512,345 C509,480 509,570 512,706" />
+
+    <!-- Text Lines on Pages -->
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M305,450 L460,444" />
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M298,500 L468,496" />
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M295,550 L472,548" />
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M292,600 L465,600" />
+
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M719,450 L564,444" />
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M726,500 L556,496" />
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M729,550 L552,548" />
+    <path android:strokeColor="#E3B190" android:strokeWidth="9" android:strokeLineCap="round" android:pathData="M732,600 L559,600" />
+
+    <!-- Twinkling Stars -->
+    <path
+        android:fillColor="#FFF8EE"
+        android:fillAlpha="0.95"
+        android:pathData="M840,120 L850,148 L878,158 L850,168 L840,196 L830,168 L802,158 L830,148 Z" />
+    <path
+        android:fillColor="#FFF8EE"
+        android:fillAlpha="0.75"
+        android:pathData="M780,70 L785,82 L797,87 L785,92 L780,104 L775,92 L763,87 L775,82 Z" />
+    <path
+        android:fillColor="#FFD37A"
+        android:fillAlpha="0.85"
+        android:pathData="M900,222 L903,229 L910,232 L903,235 L900,242 L897,235 L890,232 L897,229 Z" />
+
 </vector>

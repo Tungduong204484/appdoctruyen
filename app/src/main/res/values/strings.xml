@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">App Đọc Truyện</string>
     <string name="nav_library">Tủ Truyện</string>
-    <string name="nav_explore">Khám Phá</string>
+    <string name="nav_explore">Kháp Phá</string>
     <string name="nav_ranking">Xếp Hạng</string>
     <string name="nav_account">Tài Khoản</string>
     <string name="views_format">%1$d lượt xem</string>
@@ -69,6 +69,17 @@
     <string name="update_role_success">Đã cập nhật quyền</string>
     <string name="update_role_fail">Lỗi cập nhật</string>
     <string name="load_users_fail">Lỗi tải danh sách người dùng</string>
+    <string name="manage_chapters">Quản lý chương</string>
+    <string name="delete_confirm_title">Xác nhận xóa</string>
+    <string name="delete_chapter_msg">Bạn có chắc chắn muốn xóa chương này?</string>
+    <string name="delete">Xóa</string>
+    <string name="update_success">Cập nhật thành công</string>
+    <string name="edit_user">Sửa người dùng</string>
+    <string name="delete_user">Xóa người dùng</string>
+    <string name="change_role">Đổi quyền</string>
+    <string name="delete_user_confirm_msg">Bạn có chắc muốn xóa người dùng %1$s? Hành động này không thể hoàn tác.</string>
+    <string name="delete_user_success">Đã xóa người dùng</string>
+    <string name="delete_user_fail">Lỗi xóa người dùng</string>
 
     <!-- Story Detail & Reader -->
     <string name="story_not_found">Không tìm thấy truyện</string>

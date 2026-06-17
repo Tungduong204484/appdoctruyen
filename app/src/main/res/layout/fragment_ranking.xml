@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/background_main"
     android:orientation="vertical">
 
     <!-- Tab Layout: Chỉ còn 3 mục Đề cử, Bình luận, Lượt đọc.
@@ -12,15 +12,15 @@
         android:id="@+id/tabLayoutRanking"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        app:tabIndicatorColor="#212121"
+        app:tabIndicatorColor="@color/primary"
         app:tabIndicatorHeight="2dp"
         app:tabMode="fixed"
         app:tabGravity="fill"
         app:tabRippleColor="@android:color/transparent"
         app:tabBackground="@android:color/transparent"
-        app:tabSelectedTextColor="#212121"
+        app:tabSelectedTextColor="@color/text_primary"
         app:tabTextAppearance="@style/RankingTabText"
-        app:tabTextColor="#9E9E9E" />
+        app:tabTextColor="@color/text_secondary" />
 
     <!-- ViewPager2 -->
     <androidx.viewpager2.widget.ViewPager2

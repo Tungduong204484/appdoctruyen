@@ -8,6 +8,7 @@
     <color name="background_main">#0F172A</color> <!-- Deep Slate Blue -->
     <color name="background_surface">#1E293B</color> <!-- Lighter Slate for Cards -->
     <color name="bg_card">#1E293B</color>
+    <color name="bg_bottomnav">#1E293B</color>
 
     <color name="text_primary">#F8FAFC</color>
     <color name="text_secondary">#94A3B8</color>
@@ -33,4 +34,5 @@
     <color name="purple_700">#D97706</color>
     <color name="teal_200">#38BDF8</color>
     <color name="teal_700">#0284C7</color>
+    <color name="bg_dark">@color/background_main</color>
 </resources>

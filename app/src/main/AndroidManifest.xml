@@ -79,9 +79,19 @@
             android:label="Thêm chương mới" />
 
         <activity
+            android:name=".ManageChaptersActivity"
+            android:exported="false"
+            android:label="Quản lý chương" />
+
+        <activity
             android:name=".CompletedStoriesActivity"
             android:exported="false"
             android:label="Truyện đã hoàn thành" />
+
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:label="@string/edit_profile" />
 
     </application>
 
