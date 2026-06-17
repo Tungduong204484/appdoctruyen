@@ -2,6 +2,7 @@ package com.example.appctruyn;
 
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -15,9 +16,18 @@ import java.util.List;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
     private final List<Comment> commentList;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Comment comment);
+    }
 
     public CommentAdapter(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -29,7 +39,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        holder.bind(commentList.get(position));
+        holder.bind(commentList.get(position), listener);
     }
 
     @Override
@@ -45,26 +55,33 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             this.binding = binding;
         }
 
-        public void bind(Comment comment) {
+        public void bind(Comment comment, OnItemClickListener listener) {
             binding.tvUserName.setText(comment.getUserName());
             binding.tvContent.setText(comment.getContent());
-            
-            StringBuilder info = new StringBuilder();
-            
-            // Hiển thị chương nếu bình luận thuộc về 1 chương
-            if (comment.getChapterNumber() > 0) {
-                info.append("Chương ").append(comment.getChapterNumber()).append(" • ");
-            }
             
             if (comment.getTimestamp() != null) {
                 CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(
                         comment.getTimestamp().getTime(),
                         System.currentTimeMillis(),
                         DateUtils.MINUTE_IN_MILLIS);
-                info.append(relativeTime);
+                binding.tvTime.setText(relativeTime);
+            } else {
+                binding.tvTime.setText("");
             }
             
-            binding.tvTime.setText(info.toString());
+            // Hiển thị thông tin chương nếu có
+            if (comment.getChapterNumber() > 0) {
+                binding.tvChapterInfo.setVisibility(View.VISIBLE);
+                binding.tvChapterInfo.setText("Chương " + comment.getChapterNumber());
+            } else {
+                binding.tvChapterInfo.setVisibility(View.GONE);
+            }
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(comment);
+                }
+            });
         }
     }
 }

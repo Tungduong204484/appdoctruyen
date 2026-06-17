@@ -78,6 +78,11 @@
             android:exported="false"
             android:label="Thêm chương mới" />
 
+        <activity
+            android:name=".CompletedStoriesActivity"
+            android:exported="false"
+            android:label="Truyện đã hoàn thành" />
+
     </application>
 
 </manifest>

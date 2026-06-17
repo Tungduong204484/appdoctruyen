@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="6dp"
-    android:layout_marginVertical="6dp"
+    android:layout_margin="6dp"
     app:cardBackgroundColor="@color/background_surface"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="2dp"
     app:strokeWidth="0dp"
     android:clickable="true"
@@ -17,13 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="12dp">
 
+        <!-- Ảnh bìa truyện -->
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="70dp"
-            android:layout_height="95dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
+            android:layout_width="72dp"
+            android:layout_height="96dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
             app:strokeWidth="0dp">
 
             <ImageView
@@ -34,30 +34,32 @@
                 android:src="@drawable/ic_launcher_background" />
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Thông tin truyện -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="14dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Tên truyện"
                 android:textColor="@color/text_primary"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvGenre"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Thể loại"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
@@ -65,10 +67,9 @@
                 android:id="@+id/tvRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="★ 4.8"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/rating_star"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

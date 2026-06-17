@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.appctruyn.model.Story;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MoiHoanThanhAdapter extends RecyclerView.Adapter<MoiHoanThanhAdapter.ViewHolder> {
 
@@ -48,28 +49,30 @@ public class MoiHoanThanhAdapter extends RecyclerView.Adapter<MoiHoanThanhAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView ivCover;
-        private final TextView tvTitle;
-        private final TextView tvGenre;
+        private final TextView tvTitle, tvGenre, tvRating;
 
         public ViewHolder(@NonNull View view) {
             super(view);
             ivCover = view.findViewById(R.id.ivCover);
             tvTitle = view.findViewById(R.id.tvTitle);
             tvGenre = view.findViewById(R.id.tvGenre);
+            tvRating = view.findViewById(R.id.tvRating);
         }
 
         public void bind(final Story story) {
             tvTitle.setText(story.getTitle());
             tvGenre.setText(story.getGenre());
+            
+            // Hiển thị Rating đẹp giống ảnh mẫu (VD: ★ 4.8)
+            tvRating.setText(String.format(Locale.US, "★ %.1f", story.getRating()));
+
             Glide.with(itemView.getContext())
                     .load(story.getCoverUrl())
                     .placeholder(R.drawable.ic_launcher_background)
                     .into(ivCover);
 
             itemView.setOnClickListener(v -> {
-                if (onItemClick != null) {
-                    onItemClick.onItemClick(story);
-                }
+                if (onItemClick != null) onItemClick.onItemClick(story);
             });
         }
     }
